@@ -1,11 +1,8 @@
 [build]
-target = "wasm32-wasi"
+target = "wasm32-unknown-unknown"
 rustflags = [
     # The auto splitting runtime supports all the following WASM features.
-    "-C", "target-feature=+bulk-memory,+mutable-globals,+nontrapping-fptoint,+sign-ext,+simd128,+relaxed-simd,+tail-call,+multivalue",
-    # The following flags are specifically to optimize further on nightly.
-    "-Z", "virtual-function-elimination",
-    "-C", "lto",
+    "-C", "target-feature=+bulk-memory,+mutable-globals,+nontrapping-fptoint,+sign-ext,+simd128,+relaxed-simd",
 ]
 
 [alias]
