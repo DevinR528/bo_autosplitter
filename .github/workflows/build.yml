@@ -16,14 +16,13 @@ jobs:
       contents: write
     steps:
       - name: Checkout Commit
-        uses: actions/checkout@v4
+        uses: actions/checkout@v3
 
       - name: Install Rust
-        uses: hecrj/setup-rust-action@v2
+        uses: hecrj/setup-rust-action@v1
         with:
-          components: rust-src
-          rust-version: nightly
-          targets: wasm32-wasip1
+          rust-version: stable
+          targets: wasm32-unknown-unknown
 
       - name: Build
         run: |
@@ -31,9 +30,9 @@ jobs:
 
       - name: Release
         if: github.ref == 'refs/heads/main'
-        uses: softprops/action-gh-release@v2
+        uses: softprops/action-gh-release@v1
         with:
-          files: target/wasm32-wasip1/release/bo_teal_lotus.wasm
+          files: target/wasm32-unknown-unknown/release/bo_teal_lotus.wasm
           name: Latest
           tag_name: latest
           body: This contains the latest version of the auto splitter.
