@@ -1,8 +1,151 @@
-use std::fmt::{self, Debug};
-
 use asr::{game_engine::unity::mono::Class, Address64};
+use bytemuck::{Pod, Zeroable};
+
+#[allow(dead_code)]
+#[derive(Debug, Copy, Clone, PartialEq, PartialOrd)]
+#[repr(u32)]
+pub enum BossKind {
+    Placeholder = 0,
+    KiriKiriBozu = 1,
+    PUA = 2,
+    Hashihime = 3,
+    Yuki = 4,
+    Yokozuna = 5,
+    Jorogumo = 6,
+    KarasuTengu = 7,
+    DaiTengu = 8,
+    Gasha = 9,
+    Asahi = 10,
+    Shogun = 11,
+    Amaterasu = 12,
+}
+
+unsafe impl Zeroable for BossKind {}
+unsafe impl Pod for BossKind {}
+
+#[derive(Debug, Class, Copy, Clone, PartialEq, PartialOrd)]
+pub struct BossData {
+    #[rename = "<Boss>k__BackingField"]
+    pub boss_kind: BossKind,
+    #[rename = "<Defeated>k__BackingField"]
+    pub defeated: bool,
+    #[rename = "<InProgress>k__BackingField"]
+    pub in_progress: bool,
+    #[rename = "<TotalHealth>k__BackingField"]
+    pub total_health: f32,
+    #[rename = "<OverrideInProgress>k__BackingField"]
+    pub override_in_progress: bool,
+}
+
+#[derive(Debug, Class, Copy, Clone, PartialEq, PartialOrd)]
+pub struct EnemiesManager {
+    #[rename = "<CurrentStaffDamage>k__BackingField"]
+    pub staff_damage: f32,
+    #[rename = "bosses"]
+    pub bosses: Address64,
+}
+
+#[allow(dead_code)]
+#[derive(Debug, Copy, Clone, PartialEq, PartialOrd)]
+#[repr(u32)]
+pub enum DarumaType {
+    /// Chomper
+    Bite = 0,
+    /// Mamori
+    Parry = 1,
+    /// Toge-Chan 
+    Thorns = 2,
+    /// Jingu
+    Spirits = 3,
+    /// Kaboomaru
+    Bomb = 4,
+    /// Not sure
+    SpinAttack = 5,
+    /// Not sure
+    Deprecated1 = 6,
+    /// Pyro-Kun
+    FireWall = 7,
+    /// Yuki
+    Ice = 8,
+    /// Ken
+    Boomerang = 9,
+}
+
+unsafe impl Zeroable for DarumaType {}
+unsafe impl Pod for DarumaType {}
+
+#[derive(Debug, Class, Copy, Clone, PartialEq, PartialOrd)]
+pub struct Daruma {
+    #[rename = "<Type>k__BackingField"]
+    pub daruma_type: DarumaType,
+    #[rename = "<Available>k__BackingField"]
+    pub available: bool,
+    #[rename = "<isActive>k__BackingField"]
+    pub is_active: bool,
+    #[rename = "<TwoEyes>k__BackingField"]
+    pub two_eyes: bool,
+
+    #[rename = "<Stage1TeaCost>k__BackingField"]
+    pub stage_one_tea_cost: i32,
+    #[rename = "<Stage2TeaCost>k__BackingField"]
+    pub stage_two_tea_cost: i32,
+    #[rename = "<Stage3TeaCost>k__BackingField"]
+    pub stage_three_tea_cost: i32,
+
+    #[rename = "<Stage1Damage>k__BackingField"]
+    pub stage_one_damage: f32,
+    #[rename = "<Stage2Damage>k__BackingField"]
+    pub stage_two_damage: f32,
+    #[rename = "<Stage3Damage>k__BackingField"]
+    pub stage_three_damage: f32,
+
+    #[rename = "<Stage1Duration>k__BackingField"]
+    pub stage_one_duration: f32,
+    #[rename = "<Stage2Duration>k__BackingField"]
+    pub stage_two_duration: f32,
+    #[rename = "<Stage3Duration>k__BackingField"]
+    pub stage_three_duration: f32,
+
+    #[rename = "<TimeBetweenHits>k__BackingField"]
+    pub time_between_hits: f32,
+}
+
+#[derive(Debug, Class, Copy, Clone, PartialEq, PartialOrd)]
+pub struct DarumaManager {
+    #[rename = "<DarumaBoostDamageIncrease>k__BackingField"]
+    pub daruma_boost_damage: f32,
+    #[rename = "allDarumas"]
+    pub all_darumas: Address64,
+}
 
 #[derive(Debug, Class, Copy, Clone, PartialEq)]
+pub struct InventoryContainer {
+    #[rename = "<FeatherKeys>k__BackingField"]
+    pub feather_keys: i32,
+
+    #[rename = "<MusicSheet>k__BackingField"]
+    pub music_sheet: i32,
+
+    #[rename = "<OmamoriStraps>k__BackingField"]
+    pub omamori_straps: i32,
+
+    #[rename = "<HasFragileEgg>k__BackingField"]
+    pub fragile_egg: bool,
+
+    #[rename = "<ResetForNewGame>k__BackingField"]
+    pub reset_new_game: bool,
+
+    #[rename = "<HasKitsuneKifuda>k__BackingField"]
+    pub has_kitsune_kifuda: bool,
+
+    #[rename = "<BaseDamage>k__BackingField"]
+    pub base_damage: f32,
+
+    #[rename = "<CurrentMana>k__BackingField"]
+    pub current_mana: f32,
+}
+
+#[derive(Debug, Class, Copy, Clone, PartialEq, Eq)]
 pub struct AbilityManager {
     #[rename = "<CanAttack>k__BackingField"]
     pub can_attack: bool,
@@ -29,7 +172,7 @@ pub struct AbilityManager {
     pub can_wall_jump: bool,
 }
 
-#[derive(Debug, Class, Copy, Clone, PartialEq)]
+#[derive(Debug, Class, Copy, Clone, PartialEq, PartialOrd)]
 pub struct BetaPlayerDataManager {
     #[rename = "<TimePlayed>k__BackingField"]
     pub time_played: f32,
@@ -59,16 +202,38 @@ pub struct QuestManager {
     pub tori_dash_told: bool,
     #[rename = "<ToriFulfilledDashProphecy>k__BackingField"]
     pub tori_dash_end: bool,
+
+    /// Number of armadillos collected for Shimeji's quest.
     #[rename = "<ShimejiArmapillosCollected>k__BackingField"]
     pub shimeji_armapillos_collect: i32,
+
+    /// Collect 4 armadillos quest end
     #[rename = "<ShimejiQuestStarted>k__BackingField"]
     pub shimeji_quest_start: bool,
+
+    /// Collect 4 armadillos quest end
     #[rename = "<ShimejiQuestCompleted>k__BackingField"]
     pub shimeji_quest_end: bool,
+
+    /// The Fox wedding quest start, get Kitsune scroll and Ingenuity Omamori.
+    #[rename = "<KitsuneKifudaQuestStarted>k__BackingField"]
+    pub fox_wedding_started: bool,
+
+    /// The Fox wedding quest end, get Kitsune scroll and Ingenuity Omamori.
+    #[rename = "<KitsuneKifudaQuestCompleted>k__BackingField"]
+    pub fox_wedding_end: bool,
 
     /// The Vermilion Stranger quest (this gives fast travel)
     #[rename = "<VSQuestCompleted>k__BackingField"]
     pub vermilion_stranger_quest_end: bool,
+
+    /// Inserting the feather from the east side of white --- I mean ice palace into the keyhole
+    #[rename = "<FirstFeatherKeyEntered>k__BackingField"]
+    pub keyhole_east_feather: bool,
+
+    /// Inserting the second feather from the west side of white--- I mean ice palace
+    #[rename = "<SecondFeatherKeyEntered>k__BackingField"]
+    pub keyhole_west_feather: bool,
 
     /// This is the second boss of the game "Particularly Unmanageable Armadillo"
     #[rename = "<DefeatedPUABoss>k__BackingField"]
@@ -91,14 +256,6 @@ pub struct QuestManager {
     #[rename = "<TenguTrialQuestCompleted>k__BackingField"]
     pub defeat_tengu_boss: bool,
 
-    /// Inserting the feather from the east side of white --- I mean ice palace into the keyhole
-    #[rename = "<FirstFeatherKeyEntered>k__BackingField"]
-    pub keyhole_east_feather: bool,
-
-    /// Inserting the second feather from the west side of white--- I mean ice palace
-    #[rename = "<SecondFeatherKeyEntered>k__BackingField"]
-    pub keyhole_west_feather: bool,
-
     /// This is the seventh boss in the game "Gashadokuro" (giant skeleton)
     #[rename = "<GashaDefeated>k__BackingField"]
     pub defeat_gash_boss: bool,
@@ -109,12 +266,14 @@ pub struct QuestManager {
 
     /// This is the ninth boss in the game "Sakura Shogun" (Final Boss)
     #[rename = "<ShogunDefeated>k__BackingField"]
-    pub defeat_shogun_boss: bool,
+    pub defeat_sakura_boss: bool,
     // TODO: more of these...
 }
 
-#[derive(Class, Copy, Clone, PartialEq)]
+#[derive(Class, Copy, Clone, Debug, PartialEq)]
 pub struct GameManager {
+    #[rename = "<FromMainMenu>k__BackingField"]
+    pub from_main_menu: bool,
     #[rename = "<ElevatorEntranceUp>k__BackingField"]
     pub elevator_e_up: bool,
     #[rename = "<ElevatorFloor1Up>k__BackingField"]
@@ -135,6 +294,8 @@ pub struct GameManager {
     pub load_game: bool,
     #[rename = "<fromInGame>k__BackingField"]
     pub from_in_game: bool,
+    #[rename = "<isQuittingGame>k__BackingField"]
+    pub is_quitting: bool,
     #[rename = "<BossPercentage>k__BackingField"]
     pub boss_percentage: f32,
     #[rename = "<QuestManager>k__BackingField"]
@@ -143,25 +304,10 @@ pub struct GameManager {
     pub ability_pointer: Address64,
     #[rename = "betaDataManager"]
     pub player_data_pointer: Address64,
-}
-
-impl Debug for GameManager {
-    fn fmt(&self, f: &mut fmt::Formatter<'_>) -> fmt::Result {
-        f.debug_struct("GameManager")
-            .field("elevator_e_up", &self.elevator_e_up)
-            .field("elevator_1_up", &self.elevator_1_up)
-            .field("elevator_1_down", &self.elevator_1_down)
-            .field("elevator_2_up", &self.elevator_2_up)
-            .field("elevator_2_down", &self.elevator_2_down)
-            .field("elevator_3_up", &self.elevator_3_up)
-            .field("elevator_3_down", &self.elevator_3_down)
-            .field("vertical_chase_start", &self.vertical_chase_start)
-            .field("load_game", &self.load_game)
-            .field("from_in_game", &self.from_in_game)
-            .field("boss_percentage", &self.boss_percentage)
-            .field("quest_pointer", &self.quest_pointer)
-            .field("ability_pointer", &self.ability_pointer)
-            .field("player_data_pointer", &self.player_data_pointer)
-            .finish()
-    }
+    #[rename = "inventoryContainer"]
+    pub inventory_pointer: Address64,
+    #[rename = "enemiesManager"]
+    pub enemies_pointer: Address64,
+    #[rename = "darumaManager"]
+    pub daruma_pointer: Address64,
 }
