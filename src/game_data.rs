@@ -2,7 +2,7 @@ use asr::{game_engine::unity::mono::Class, Address64};
 use bytemuck::{Pod, Zeroable};
 
 #[allow(dead_code)]
-#[derive(Debug, Copy, Clone, PartialEq, PartialOrd)]
+#[derive(Debug, Copy, Clone, PartialEq, Eq, PartialOrd, Ord)]
 #[repr(u32)]
 pub enum BossKind {
     Placeholder = 0,
@@ -46,7 +46,7 @@ pub struct EnemiesManager {
 }
 
 #[allow(dead_code)]
-#[derive(Debug, Copy, Clone, PartialEq, PartialOrd)]
+#[derive(Debug, Copy, Clone, PartialEq, Eq, PartialOrd, Ord)]
 #[repr(u32)]
 pub enum DarumaType {
     /// Chomper
@@ -180,60 +180,76 @@ pub struct BetaPlayerDataManager {
 
 #[derive(Debug, Class, Copy, Clone, PartialEq, Eq)]
 pub struct QuestManager {
+    /// Asahi bulks your bamboo sword start
     #[rename = "<AsahiBambooStaffQuestStarted>k__BackingField"]
     pub asahi_staff_start: bool,
+    /// Asahi bulks your bamboo sword end
     #[rename = "<AsahiBambooStaffQuestCompleted>k__BackingField"]
     pub asahi_staff_end: bool,
+
+    /// Asahi gives quest for dash when entering caves???
     #[rename = "<AsahiEyeOfTheBeastQuestStarted>k__BackingField"]
     pub asahi_eye_of_beast_start: bool,
+    /// Defeate PUA and get eye of beast
     #[rename = "<AsahiEyeOfTheBeastQuestCompleted>k__BackingField"]
     pub asahi_eye_of_beast_end: bool,
+    
+    /// Not really sure when this splits
     #[rename = "<AsahiAfterArmapilloBoss>k__BackingField"]
     pub asahi_post_armapillo_boss: bool,
+
+    // No idea what bump (start)
     #[rename = "<ToriBumpProphecyTold>k__BackingField"]
     pub tori_bump_told: bool,
+    // No idea what bump (end)
     #[rename = "<ToriFulfilledBumpProphecy>k__BackingField"]
     pub tori_bump_end: bool,
+    
+    /// Bird bat prophecy start (not really sure)
     #[rename = "<ToriBatProphecyTold>k__BackingField"]
     pub tori_bat_told: bool,
+    /// Bird bat prophecy start (not really sure)
     #[rename = "<ToriFulfilledBatProphecy>k__BackingField"]
     pub tori_bat_end: bool,
+
+    /// Bird dash prophecy start (not really sure)
     #[rename = "<ToriDashProphecyTold>k__BackingField"]
     pub tori_dash_told: bool,
+    /// Bird dash prophecy end (not really sure)
     #[rename = "<ToriFulfilledDashProphecy>k__BackingField"]
     pub tori_dash_end: bool,
 
     /// Number of armadillos collected for Shimeji's quest.
     #[rename = "<ShimejiArmapillosCollected>k__BackingField"]
     pub shimeji_armapillos_collect: i32,
-
-    /// Collect 4 armadillos quest end
+    /// Collect 4 armadillos quest start
     #[rename = "<ShimejiQuestStarted>k__BackingField"]
     pub shimeji_quest_start: bool,
-
     /// Collect 4 armadillos quest end
     #[rename = "<ShimejiQuestCompleted>k__BackingField"]
     pub shimeji_quest_end: bool,
 
     /// The Fox wedding quest start, get Kitsune scroll and Ingenuity Omamori.
     #[rename = "<KitsuneKifudaQuestStarted>k__BackingField"]
-    pub fox_wedding_started: bool,
-
+    pub fox_wedding_start: bool,
     /// The Fox wedding quest end, get Kitsune scroll and Ingenuity Omamori.
     #[rename = "<KitsuneKifudaQuestCompleted>k__BackingField"]
     pub fox_wedding_end: bool,
 
-    /// The Vermilion Stranger quest (this gives fast travel)
+    /// The Vermilion Stranger quest start (this gives fast travel)
+    #[rename = "<VermillionStrangerQuestStarted>k__BackingField"]
+    pub vermilion_stranger_quest_start: bool,
+    /// The Vermilion Stranger quest end (this gives fast travel)
     #[rename = "<VSQuestCompleted>k__BackingField"]
     pub vermilion_stranger_quest_end: bool,
 
-    /// Inserting the feather from the east side of white --- I mean ice palace into the keyhole
+    /// Inserting the feather from the west side of white --- I mean ice palace into the keyhole
     #[rename = "<FirstFeatherKeyEntered>k__BackingField"]
-    pub keyhole_east_feather: bool,
+    pub west_feather_in_keyhole: bool,
 
-    /// Inserting the second feather from the west side of white--- I mean ice palace
+    /// Inserting the second feather from the east side of white--- I mean ice palace
     #[rename = "<SecondFeatherKeyEntered>k__BackingField"]
-    pub keyhole_west_feather: bool,
+    pub east_feather_in_keyhole: bool,
 
     /// This is the second boss of the game "Particularly Unmanageable Armadillo"
     #[rename = "<DefeatedPUABoss>k__BackingField"]
@@ -267,6 +283,13 @@ pub struct QuestManager {
     /// This is the ninth boss in the game "Sakura Shogun" (Final Boss)
     #[rename = "<ShogunDefeated>k__BackingField"]
     pub defeat_sakura_boss: bool,
+
+    /// This is as the credits roll, you finished GG
+    ///
+    /// TODO: confirm
+    #[rename = "<PostGame>k__BackingField"]
+    pub credits_roll: bool,
+
     // TODO: more of these...
 }
 

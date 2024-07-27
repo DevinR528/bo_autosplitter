@@ -41,6 +41,12 @@ pub struct Settings {
     #[default = false]
     pub asahi_eye_of_beast_end: bool,
 
+    /// Split on starting Shimeji Armadillo collection quest.
+    ///
+    /// This is the quest where you collect 4 Armadillos.
+    #[default = false]
+    pub shimeji_quest_start: bool,
+
     /// Split on completing Shimeji Armadillo collection quest.
     ///
     /// This is the quest where you collect 4 Armadillos.
@@ -70,6 +76,12 @@ pub struct Settings {
     /// Upon obtaining the east side feather.
     #[default = false]
     pub second_feather_key: bool,
+
+    /// Split on starting the Vermilion Stranger quest.
+    ///
+    /// This quest gives fast travel.
+    #[default = false]
+    pub vermilion_stranger_quest_start: bool,
 
     /// Split on completing the Vermilion Stranger quest.
     ///
@@ -126,12 +138,17 @@ pub struct Settings {
     #[default = false]
     pub defeat_jorogumo_boss: bool,
 
-    /// Split on defeating Tengu Trio.
+    /// Split on defeating KarasuTengu Trio.
     ///
-    /// This is the sixth boss of the game Tengu Trio.
-    /// TODO: this split is unconfirmed, it is based on `QuestManager::TenguTrialQuestCompleted`.
+    /// This is the sixth boss of the first Tengu of the Trio.
     #[default = false]
-    pub defeat_tengu_boss: bool,
+    pub defeat_karasu_tengu_boss: bool,
+
+    /// Split on defeating DaiTengu Trio.
+    ///
+    /// This is the sixth boss of the second Tengu of the Trio.
+    #[default = false]
+    pub defeat_dai_tengu_boss: bool,
 
     /// Split on defeating Gashadokuro (the giant skeleton).
     ///
@@ -198,10 +215,64 @@ pub struct Settings {
     /// This is given after west side ice palace.
     #[default = false]
     pub can_wall_jump: bool,
+
+    /// Split on gaining Chomper Daruma.
+    ///
+    /// This is given early in Caves.
+    #[default = false]
+    pub got_chomper_daruma: bool,
+
+    /// Split on gaining Kaboomaru.
+    ///
+    /// This is given at the shop.
+    #[default = false]
+    pub got_kaboomaru_daruma: bool,
+
+    /// Split on gaining Yuki.
+    ///
+    /// This is given at the shop.
+    #[default = false]
+    pub got_yuki_daruma: bool,
+
+    /// Split on gaining Jingu.
+    ///
+    /// This is given at the shop.
+    #[default = false]
+    pub got_jingu_daruma: bool,
+
+    /// Split on gaining Mamori.
+    ///
+    /// This is given at the shop.
+    #[default = false]
+    pub got_mamori_daruma: bool,
+
+    /// Split on gaining Ken.
+    ///
+    /// This is given at the shop.
+    #[default = false]
+    pub got_ken_daruma: bool,
+
+    /// Split on gaining PyroKun.
+    ///
+    /// This is given at the shop.
+    #[default = false]
+    pub got_pyro_daruma: bool,
+
+    /// Split on gaining TogiChan.
+    ///
+    /// This is given at the shop.
+    #[default = false]
+    pub got_togichan_daruma: bool,
+
+     /// Split on credits appearing.
+    ///
+    /// This is once the game has been beaten.
+    #[default = false]
+    pub credits_roll: bool,
 }
 
 pub const ANY_PERCENT: &[&str] = &[
-    "can_bat", // KiriKiri Bozu split
+    "defeated_kirikiri_boss", // KiriKiri Bozu split
     "defeated_pua_boss", // PUA defeated (armadillo) split
     "defeat_hashihime_boss", // Hashihime defeated (bridge) split
     "vermilion_stranger_quest_end", // Fast Travel split
@@ -218,6 +289,7 @@ pub const ANY_PERCENT: &[&str] = &[
     "first_elevator_up", // Palace then enter first elevator
     "defeat_ashai_boss", // Defeat Asahi boss
     "defeat_sakura_boss", // Defeat Sakura Shogun final boss
+    "credits_roll", // Defeat Sakura Shogun final boss
 ];
 
 #[allow(dead_code)]
