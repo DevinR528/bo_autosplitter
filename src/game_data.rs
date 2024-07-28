@@ -53,7 +53,7 @@ pub enum DarumaType {
     Bite = 0,
     /// Mamori
     Parry = 1,
-    /// Toge-Chan 
+    /// Toge-Chan
     Thorns = 2,
     /// Jingu
     Spirits = 3,
@@ -193,7 +193,7 @@ pub struct QuestManager {
     /// Defeate PUA and get eye of beast
     #[rename = "<AsahiEyeOfTheBeastQuestCompleted>k__BackingField"]
     pub asahi_eye_of_beast_end: bool,
-    
+
     /// Not really sure when this splits
     #[rename = "<AsahiAfterArmapilloBoss>k__BackingField"]
     pub asahi_post_armapillo_boss: bool,
@@ -204,7 +204,7 @@ pub struct QuestManager {
     // No idea what bump (end)
     #[rename = "<ToriFulfilledBumpProphecy>k__BackingField"]
     pub tori_bump_end: bool,
-    
+
     /// Bird bat prophecy start (not really sure)
     #[rename = "<ToriBatProphecyTold>k__BackingField"]
     pub tori_bat_told: bool,
@@ -228,6 +228,13 @@ pub struct QuestManager {
     /// Collect 4 armadillos quest end
     #[rename = "<ShimejiQuestCompleted>k__BackingField"]
     pub shimeji_quest_end: bool,
+
+    /// Rozu's Requiem quest start
+    #[rename = "<RozusRequiemQuestStarted>k__BackingField"]
+    pub rozus_requiem_start: bool,
+    /// Rozu's Requiem quest end
+    #[rename = "<RozusRequiemQuestCompleted>k__BackingField"]
+    pub rozus_requiem_end: bool,
 
     /// The Fox wedding quest start, get Kitsune scroll and Ingenuity Omamori.
     #[rename = "<KitsuneKifudaQuestStarted>k__BackingField"]
@@ -289,7 +296,6 @@ pub struct QuestManager {
     /// TODO: confirm
     #[rename = "<PostGame>k__BackingField"]
     pub credits_roll: bool,
-
     // TODO: more of these...
 }
 

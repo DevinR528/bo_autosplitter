@@ -53,6 +53,18 @@ pub struct Settings {
     #[default = false]
     pub shimeji_quest_end: bool,
 
+    /// Split on starting Rozu's Requiem quest.
+    ///
+    /// This is the quest where the demo ended (bunny gives you a note).
+    #[default = false]
+    pub rozus_requiem_start: bool,
+
+    /// Split on completing Rozu's Requiem quest.
+    ///
+    /// This is the quest where the demo ended (bunny gives you a note).
+    #[default = false]
+    pub rozus_requiem_end: bool,
+
     /// Split on inserting the first feather in keyhole.
     ///
     /// Upon inserting the first key into the west keyhole.
@@ -272,24 +284,25 @@ pub struct Settings {
 }
 
 pub const ANY_PERCENT: &[&str] = &[
-    "defeated_kirikiri_boss", // KiriKiri Bozu split
-    "defeated_pua_boss", // PUA defeated (armadillo) split
-    "defeat_hashihime_boss", // Hashihime defeated (bridge) split
-    "vermilion_stranger_quest_end", // Fast Travel split
-    "defeat_kaboto_boss", // Yokozuna Kaboto (hover) split
-    "can_grapple", // Sheet music split
-    "can_idash", // Shade Cloak (i-dash) split
-    "can_hammer_dash", // Dive (mallet dive) split
-    "defeat_jorogumo_boss", // Spider boss split
-    "fox_wedding_end", // Fox wedding split (Kitsune Kifuda, Ingenuity Omamori)
-    "can_wall_jump", // Wall jump split (West ice palace)
+    "defeated_kirikiri_boss",        // KiriKiri Bozu split
+    "defeated_pua_boss",             // PUA defeated (armadillo) split
+    "rozus_requiem_start",           // Rozu's Requiem quest start
+    "defeat_hashihime_boss",         // Hashihime defeated (bridge) split
+    "vermilion_stranger_quest_end",  // Fast Travel split
+    "defeat_kaboto_boss",            // Yokozuna Kaboto (hover) split
+    "can_grapple",                   // Sheet music split
+    "can_idash",                     // Shade Cloak (i-dash) split
+    "can_hammer_dash",               // Dive (mallet dive) split
+    "defeat_jorogumo_boss",          // Spider boss split
+    "fox_wedding_end",               // Fox wedding split (Kitsune Kifuda, Ingenuity Omamori)
+    "can_wall_jump",                 // Wall jump split (West ice palace)
     // "first_feather_key", // First feather (West ice palace)
-    "second_feather_key", // DaiTangu second feather key (East ice palace)
-    "defeat_gash_boss", // Defeat Gashadokuro skeleton
-    "first_elevator_up", // Palace then enter first elevator
-    "defeat_ashai_boss", // Defeat Asahi boss
-    "defeat_sakura_boss", // Defeat Sakura Shogun final boss
-    "credits_roll", // Defeat Sakura Shogun final boss
+    "second_feather_key",            // DaiTangu second feather key (East ice palace)
+    "defeat_gash_boss",              // Defeat Gashadokuro skeleton
+    "first_elevator_up",             // Palace then enter first elevator
+    "defeat_ashai_boss",             // Defeat Asahi boss
+    "defeat_sakura_boss",            // Defeat Sakura Shogun final boss
+    "credits_roll",                  // Credits roll
 ];
 
 #[allow(dead_code)]
