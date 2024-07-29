@@ -198,15 +198,21 @@ pub struct Settings {
     #[default = false]
     pub defeat_jorogumo_boss: bool,
 
-    /// Split on defeating KarasuTengu Trio.
+    /// Split on defeating KarasuTengu the single bird Tengu.
     ///
-    /// This is the sixth boss of the first Tengu of the Trio.
+    /// This is the first Tengu of the Trio.
     #[default = false]
-    pub defeat_karasu_tengu_boss: bool,
+    pub defeat_karasu_tengu_one_boss: bool,
 
-    /// Split on defeating DaiTengu Trio.
+    /// Split on defeating KarasuTengu the duo bird Tengu.
     ///
-    /// This is the sixth boss of the second Tengu of the Trio.
+    /// This is the second Tengu of the Trio (two at once).
+    #[default = false]
+    pub defeat_karasu_tengu_two_boss: bool,
+
+    /// Split on defeating DaiTengu Trio (all three birds).
+    ///
+    /// This is the final Tengu fight (all three of them).
     #[default = false]
     pub defeat_dai_tengu_boss: bool,
 

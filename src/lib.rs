@@ -562,6 +562,23 @@ async fn main() {
                                                     timer::split();
                                                 }
                                             };
+                                            ($field:ident, $extra:ident == $val:expr, $msg:expr) => {
+                                                if !old_boss.defeated
+                                                    && new_boss.defeated
+                                                    && new_boss.$extra == $val
+                                                    && settings.$field
+                                                    && !completed_splits
+                                                        .get(stringify!($field))
+                                                        .copied()
+                                                        .unwrap_or(true)
+                                                {
+                                                    print_message(concat!("Split for ", $msg));
+                                                    *completed_splits
+                                                        .entry(stringify!($field).to_string())
+                                                        .or_insert(true) = true;
+                                                    timer::split();
+                                                }
+                                            };
                                         }
 
                                         match new_boss.boss_kind {
@@ -570,18 +587,20 @@ async fn main() {
                                             BossKind::PUA => check_boss!(defeated_pua_boss, "PUA defeated split"),
                                             BossKind::Hashihime => check_boss!(defeat_hashihime_boss, "Hashihime defeated"),
                                             BossKind::Yuki => {
+                                                // TODO: who dis...
                                                 asr::print_message(&format!("Yuki boss matched: {:#?}\n{:#?}", new_boss, old_boss));
                                             },
                                             BossKind::Yokozuna => check_boss!(defeat_kaboto_boss, "Yokozuna defeated split"),
                                             BossKind::Jorogumo => check_boss!(defeat_jorogumo_boss, "Jorojumo defeated"),
-                                            // TODO: confirm who this is, I think it is the first tengu bird in ice palace
-                                            BossKind::KarasuTengu => check_boss!(defeat_karasu_tengu_boss, "KarasuTengu defeated"),
-                                            // TODO: confirm who this is, I think it is the second tengu bird in ice palace
-                                            BossKind::DaiTengu => check_boss!(defeat_dai_tengu_boss, "DaiTengu defeated"),
+                                            BossKind::KarasuTengu => {
+                                                check_boss!(defeat_karasu_tengu_one_boss, total_health == 133.0, "KarasuTengu single defeated");
+                                                check_boss!(defeat_karasu_tengu_two_boss, total_health == 225.0, "KarasuTengu duo defeated");
+                                            }
+                                            BossKind::DaiTengu => check_boss!(defeat_dai_tengu_boss, "DaiTengu (Tengu Trio) defeated"),
                                             BossKind::Gasha => check_boss!(defeat_gash_boss, "Gashadokuro defeated"),
                                             BossKind::Asahi => check_boss!(defeat_ashai_boss, "Asahi defeated"),
                                             BossKind::Shogun => check_boss!(defeat_sakura_boss, "Sakura Shogun defeated"),
-                                            // TODO: who dis
+                                            // TODO: who dis...
                                             BossKind::Amaterasu => {
                                                 asr::print_message(&format!("Amaterasu boss matched: {:#?}\n{:#?}", new_boss, old_boss));
                                             }
