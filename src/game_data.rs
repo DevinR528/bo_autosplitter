@@ -124,7 +124,7 @@ pub struct InventoryContainer {
     pub feather_keys: i32,
 
     #[rename = "<MusicSheet>k__BackingField"]
-    pub music_sheet: i32,
+    pub music_sheets: i32,
 
     #[rename = "<OmamoriStraps>k__BackingField"]
     pub omamori_straps: i32,
@@ -141,8 +141,8 @@ pub struct InventoryContainer {
     #[rename = "<BaseDamage>k__BackingField"]
     pub base_damage: f32,
 
-    #[rename = "<CurrentMana>k__BackingField"]
-    pub current_mana: f32,
+    #[rename = "<InscrutableTableFragment>k__BackingField"]
+    pub tablets: i32,
 }
 
 #[derive(Debug, Class, Copy, Clone, PartialEq, Eq)]

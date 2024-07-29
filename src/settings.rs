@@ -95,6 +95,36 @@ pub struct Settings {
     #[default = false]
     pub vermilion_stranger_quest_start: bool,
 
+    /// Split on finding 1 tablet for VS quest.
+    ///
+    /// No ordering to this, if you find a tablet this split will happen.
+    #[default = false]
+    pub one_vs_tablet: bool,
+
+    /// Split on finding 2 tablets for VS quest.
+    ///
+    /// No ordering to this, if you find 2 tablets this split will happen.
+    #[default = false]
+    pub two_vs_tablet: bool,
+
+    /// Split on finding 3 tablets for VS quest.
+    ///
+    /// No ordering to this, if you find 3 tablets this split will happen.
+    #[default = false]
+    pub three_vs_tablet: bool,
+
+    /// Split on finding 4 tablets for VS quest.
+    ///
+    /// No ordering to this, if you find 4 tablets this split will happen.
+    #[default = false]
+    pub four_vs_tablet: bool,
+
+    /// Split on finding 5 tablets for VS quest, this is the final tablet.
+    ///
+    /// No ordering to this, if you find 5 tablets this split will happen.
+    #[default = false]
+    pub five_vs_tablet: bool,
+
     /// Split on completing the Vermilion Stranger quest.
     ///
     /// This quest gives fast travel.
@@ -105,7 +135,25 @@ pub struct Settings {
     ///
     /// This is the first elevator when entering the castle.
     #[default = false]
-    pub first_elevator_up: bool,
+    pub elevator_e_up: bool,
+
+    /// Split on entering the first floor palace elevator.
+    ///
+    /// This is the second elevator up, so now on 1st floor going to 2nd.
+    #[default = false]
+    pub elevator_1_up: bool,
+
+     /// Split on entering the second floor palace elevator.
+    ///
+    /// This is the second elevator up, so now on 2nd floor going to 3rd.
+    #[default = false]
+    pub elevator_2_up: bool,
+
+     /// Split on entering the third floor palace elevator.
+    ///
+    /// This is the third elevator up, so now on 3rd floor going to 4th (last).
+    #[default = false]
+    pub elevator_3_up: bool,
 
     /// Split on starting the fox wedding quest.
     ///
