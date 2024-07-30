@@ -23,7 +23,7 @@ jobs:
         with:
           components: rust-src
           rust-version: nightly
-          targets: wasm32-unknown-unknown
+          targets: wasm32-wasi
 
       - name: Build
         run: |
@@ -33,7 +33,7 @@ jobs:
         if: github.ref == 'refs/heads/main'
         uses: softprops/action-gh-release@v2
         with:
-          files: target/wasm32-unknown-unknown/release/bo_teal_lotus.wasm
+          files: target/wasm32-wasi/release/bo_teal_lotus.wasm
           name: Latest
           tag_name: latest
           body: This contains the latest version of the auto splitter.

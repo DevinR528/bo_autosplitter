@@ -1,4 +1,4 @@
-use asr::settings::{gui::Title, Gui};
+use asr::settings::{gui::{FileSelect, Title}, Gui};
 
 #[derive(Gui, Debug, PartialEq, Eq, Clone, Copy)]
 pub enum Category {
@@ -16,6 +16,12 @@ pub struct Settings {
 
     /// Select your category, the default splits will be selected for you.
     pub category: Category,
+
+    /// Select your splits file.
+    ///
+    /// This should be the .lss file that you use for Bo Path of the Teal Lotus.
+    #[filter((_, "*.lss"), (_, "*.lsl"))]
+    pub lss_file: FileSelect,
 
     /// Split on starting Asahi's staff quest.
     ///
@@ -337,6 +343,8 @@ pub struct Settings {
     pub credits_roll: bool,
 }
 
+#[allow(dead_code)]
+// TODO: If no file has been selected here are some suggestions
 pub const ANY_PERCENT: &[&str] = &[
     "defeated_kirikiri_boss",        // KiriKiri Bozu split
     "defeated_pua_boss",             // PUA defeated (armadillo) split

@@ -1,14 +1,16 @@
-#![feature(type_alias_impl_trait, const_async_blocks)]
+#![feature(type_alias_impl_trait, const_async_blocks, wasi_ext)]
 
-use std::collections::HashMap;
+use std::{collections::HashMap, fs::File, io::BufReader};
 
 use asr::{
     future::next_tick,
     game_engine::unity::{get_scene_name, mono::Module, SceneManager},
     settings::{Gui, Map},
     time::Duration,
-    timer, Address64, Process,
+    timer::{self, TimerState},
+    Address64, Process,
 };
+use xml::{reader::XmlEvent as ReaderEvent, EventReader};
 
 mod array;
 mod game_data;
@@ -20,7 +22,7 @@ use game_data::{
     DarumaBinding, DarumaManager, DarumaType, EnemiesManager, GameManager, InventoryContainer,
     QuestManager,
 };
-use settings::{Category, Settings, ANY_PERCENT};
+use settings::Settings;
 
 asr::async_main!(stable);
 
@@ -34,12 +36,17 @@ async fn main() {
     let mut settings = Settings::register();
 
     print_message("Bo AutoSplitter ON!!");
-    let mut old_category = None;
+    let mut old_setting_file = None;
+    let mut should_read_settings = true;
 
     // TODO: should probably move `settings.update()` into the function call `update_settings()`
     let mut completed_splits = HashMap::new();
-    update_settings(&settings, &mut old_category, &mut completed_splits);
-    settings.update();
+    update_settings(
+        &mut settings,
+        &mut old_setting_file,
+        &mut should_read_settings,
+        &mut completed_splits,
+    );
 
     let process = Process::wait_attach("Bo.exe").await;
 
@@ -160,8 +167,22 @@ async fn main() {
 
                     #[allow(unused_labels)]
                     'normal_game_loop: loop {
-                        update_settings(&settings, &mut old_category, &mut completed_splits);
-                        settings.update();
+                        match timer::state() {
+                            TimerState::NotRunning
+                            | TimerState::Running
+                            | TimerState::Paused => {},
+                            TimerState::Ended => {
+                                // reset completed splits and any other settings
+                                completed_splits.clear();
+                                paused = false;
+                            },
+                            TimerState::Unknown => {
+                                asr::print_message("TimerState::Unknown...");
+                            },
+                            // non_exhaustive
+                            _ => {}
+                        }
+                        update_settings(&mut settings, &mut old_setting_file, &mut should_read_settings, &mut completed_splits);
 
                         // UPDATE first since this knows about everything
                         match game_manager.read(&process, game_manager_inst) {
@@ -588,7 +609,7 @@ async fn main() {
                                             BossKind::Hashihime => check_boss!(defeat_hashihime_boss, "Hashihime defeated"),
                                             BossKind::Yuki => {
                                                 // TODO: who dis...
-                                                asr::print_message(&format!("Yuki boss matched: {:#?}\n{:#?}", new_boss, old_boss));
+                                                print_message(&format!("Yuki boss matched: {:#?}\n{:#?}", new_boss, old_boss));
                                             },
                                             BossKind::Yokozuna => check_boss!(defeat_kaboto_boss, "Yokozuna defeated split"),
                                             BossKind::Jorogumo => check_boss!(defeat_jorogumo_boss, "Jorojumo defeated"),
@@ -602,7 +623,7 @@ async fn main() {
                                             BossKind::Shogun => check_boss!(defeat_sakura_boss, "Sakura Shogun defeated"),
                                             // TODO: who dis...
                                             BossKind::Amaterasu => {
-                                                asr::print_message(&format!("Amaterasu boss matched: {:#?}\n{:#?}", new_boss, old_boss));
+                                                print_message(&format!("Amaterasu boss matched: {:#?}\n{:#?}", new_boss, old_boss));
                                             }
                                         }
                                     }
@@ -679,34 +700,6 @@ async fn main() {
         .await;
 }
 
-fn update_settings(
-    settings: &Settings,
-    old_category: &mut Option<Category>,
-    completed: &mut HashMap<String, bool>,
-) {
-    match (settings.category, *old_category != Some(settings.category)) {
-        (Category::AnyPercent, true) => {
-            let map = Map::load();
-            for setting in ANY_PERCENT {
-                map.insert(setting, true)
-            }
-            map.store();
-            *old_category = Some(settings.category);
-        }
-        (Category::HundredPercent, true) => todo!("impl HundredPercent category"),
-        _ => {}
-    }
-
-    let map = Map::load();
-    if (completed.len() as u64) != map.len() {
-        for k in map.keys() {
-            completed.entry(k.to_string()).or_insert(false);
-        }
-
-        print_message(&format!("OOH SHIT: {:#?}", completed));
-    }
-}
-
 async fn get_boss_data_array(
     process: &Process,
     old_em: Option<&EnemiesManager>,
@@ -732,3 +725,206 @@ async fn get_daruma_data_array(
     }
     Ok(all_darumas)
 }
+
+fn update_settings(
+    settings: &mut Settings,
+    old_lss_file: &mut Option<String>,
+    should_read_settings: &mut bool,
+    completed: &mut HashMap<String, bool>,
+) {
+    settings.update();
+
+    if !settings.lss_file.path.is_empty() && *should_read_settings {
+        if read_settings_xml(settings).is_err() {
+            print_message(&format!(
+                "Error: reading xml settings file '{}'",
+                settings.lss_file.path
+            ));
+        } else {
+            *should_read_settings = false;
+            *old_lss_file = Some(settings.lss_file.path.clone());
+
+            print_message(&format!("Updated map (read file) {:#?}", Map::load()));
+        }
+    }
+
+    let map = Map::load();
+    if (completed.len() as u64) != map.len() {
+        for k in map.keys() {
+            completed.entry(k.to_string()).or_insert(false);
+        }
+
+        print_message(&format!("Updated map {:#?}", Map::load()));
+    }
+}
+
+fn read_settings_xml(settings: &Settings) -> Result<(), ()> {
+    match File::open(&settings.lss_file.path) {
+        Ok(f) => {
+            let map = Map::load();
+
+            let file = BufReader::new(f); // Buffering is important for performance
+            let parser = EventReader::new(file);
+
+            let mut in_autosplitter = false;
+            let mut in_splits = false;
+            let mut current_name = None;
+            for ev_result in parser {
+                match ev_result {
+                    Ok(ev) => {
+                        if settings.lss_file.path.ends_with(".lsl") {
+                            match_lsl_xml(
+                                ev,
+                                &map,
+                                &mut current_name,
+                                &mut in_splits,
+                                &mut in_autosplitter,
+                            );
+                        } else {
+                            match_lss_xml(ev, &map, &mut in_splits, &mut in_autosplitter);
+                        }
+                    }
+                    Err(err) => print_message(&format!("Error in read: {}", err)),
+                }
+            }
+            map.store();
+        }
+        Err(e) => print_message(&format!("Error in read: {}", e)),
+    }
+
+    Ok(())
+}
+
+fn match_lss_xml(e: ReaderEvent, map: &Map, in_splits: &mut bool, in_autosplitter: &mut bool) {
+    match &e {
+        ReaderEvent::StartElement { name, .. } if name.local_name == "AutoSplitterSettings" => {
+            *in_autosplitter = true;
+        }
+        ReaderEvent::StartElement { name, .. } if name.local_name == "Split" => {
+            *in_splits = true;
+        }
+        ReaderEvent::Characters(val) if *in_autosplitter && *in_splits => {
+            map.insert(val, true);
+        }
+        ReaderEvent::EndElement { name } if name.local_name == "AutoSplitterSettings" => {
+            *in_autosplitter = false;
+        }
+        ReaderEvent::EndElement { name } if name.local_name == "Split" => {
+            *in_splits = false;
+        }
+        _ => {}
+    }
+}
+
+fn match_lsl_xml(
+    e: ReaderEvent,
+    map: &Map,
+    current_name: &mut Option<String>,
+    in_splits: &mut bool,
+    in_autosplitter: &mut bool,
+) {
+    match &e {
+        ReaderEvent::StartElement { name, .. } if name.local_name == "CustomSettings" => {
+            *in_autosplitter = true;
+        }
+        ReaderEvent::StartElement {
+            name, attributes, ..
+        } if name.local_name == "Setting" => {
+            print_message(&format!("{:?}", attributes));
+            if attributes
+                .first()
+                .map(|attr| attr.name.local_name == "id" && !attr.value.is_empty())
+                .unwrap_or(false)
+            {
+                *current_name = attributes.first().map(|attr| attr.value.clone());
+            }
+            *in_splits = true;
+        }
+        ReaderEvent::Characters(val)
+            if *in_autosplitter && *in_splits && current_name.is_some() =>
+        {
+            map.insert(current_name.as_ref().unwrap(), val == "True");
+            *current_name = None;
+        }
+        ReaderEvent::EndElement { name } if name.local_name == "CustomSettings" => {
+            *in_autosplitter = false;
+        }
+        ReaderEvent::EndElement { name } if name.local_name == "Split" => {
+            *in_splits = false;
+        }
+        _ => {}
+    }
+}
+
+// #[allow(dead_code)]
+// fn write_settings_xml(settings: &Settings) -> Result<(), ()> {
+//     let mut out_buf = vec![];
+//     match File::open(&settings.lss_file.path) {
+//         Ok(f) => {
+//             let map = Map::load();
+
+//             let file = BufReader::new(f); // Buffering is important for performance
+//             let parser = EventReader::new(file);
+
+//             let mut outwriter = EventWriter::new(&mut out_buf);
+//             let mut splits_written = false;
+//             for e in parser {
+//                 match &e {
+//                     Ok(ReaderEvent::StartElement {
+//                         name, attributes, ..
+//                     }) if name.local_name == "Split" => {
+//                         print_message(&format!("{name} {attributes:?} {e:?}"));
+//                         if !splits_written {
+//                             for (k, _val) in map.iter() {
+//                                 if let Err(err) =
+//                                     outwriter.write(WriterEvent::start_element("Split"))
+//                                 {
+//                                     print_message(&format!("Error writing event {}", err))
+//                                 }
+
+//                                 if let Err(err) = outwriter.write(WriterEvent::characters(&k)) {
+//                                     print_message(&format!("Error writing event {}", err))
+//                                 }
+
+//                                 if let Err(err) =
+//                                     outwriter.write(WriterEvent::end_element().name("Split"))
+//                                 {
+//                                     print_message(&format!("Error writing event {}", err))
+//                                 }
+//                             }
+//                             splits_written = true;
+//                         }
+//                         // We skip all elements named "Split"
+//                         continue;
+//                     }
+//                     Err(e) => {
+//                         print_message(&format!("Error: {e}"));
+//                         break;
+//                     }
+//                     _ => {}
+//                 }
+
+//                 if let Ok(ev) = e {
+//                     if let Some(event) = ev.as_writer_event() {
+//                         if let Err(err) = outwriter.write(event) {
+//                             print_message(&format!("Error writing event {} {:?}", err, ev))
+//                         }
+//                     }
+//                 }
+//             }
+//         }
+//         Err(e) => print_message(&format!("Error in write (while reading): {}", e)),
+//     }
+
+//     match File::create(&settings.lss_file.path) {
+//         Ok(mut file) => {
+//             if let Err(err) = file.write_all_at(&out_buf, 0) {
+//                 print_message(&format!("Error: while writing file {}", err));
+//             } else {
+//                 print_message(&format!("written {}", String::from_utf8_lossy(&out_buf)));
+//             }
+//         }
+//         Err(e) => print_message(&format!("Error in write: {}", e)),
+//     }
+//     Ok(())
+// }
