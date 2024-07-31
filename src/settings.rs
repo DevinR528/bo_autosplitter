@@ -1,4 +1,7 @@
-use asr::settings::{gui::{FileSelect, Title}, Gui};
+use asr::settings::{
+    gui::{FileSelect, Title},
+    Gui,
+};
 
 #[derive(Gui, Debug, PartialEq, Eq, Clone, Copy)]
 pub enum Category {
@@ -149,13 +152,13 @@ pub struct Settings {
     #[default = false]
     pub elevator_1_up: bool,
 
-     /// Split on entering the second floor palace elevator.
+    /// Split on entering the second floor palace elevator.
     ///
     /// This is the second elevator up, so now on 2nd floor going to 3rd.
     #[default = false]
     pub elevator_2_up: bool,
 
-     /// Split on entering the third floor palace elevator.
+    /// Split on entering the third floor palace elevator.
     ///
     /// This is the third elevator up, so now on 3rd floor going to 4th (last).
     #[default = false]
@@ -163,13 +166,19 @@ pub struct Settings {
 
     /// Split on starting the fox wedding quest.
     ///
-    /// This splits on starting of the fox wedding quest (after burrows).
+    /// This splits on starting of the fox wedding quest.
     #[default = false]
     pub fox_wedding_start: bool,
 
+    /// Split on saving the groom from Jorogumo.
+    ///
+    /// This splits on saving the Fox from the burrows spider Jorogumo.
+    #[default = false]
+    pub fox_wedding_save_groom: bool,
+
     /// Split on finishing the fox wedding quest.
     ///
-    /// This splits on completion of the fox wedding quest (after burrows).
+    /// This splits on completion of the fox wedding quest.
     #[default = false]
     pub fox_wedding_end: bool,
 
@@ -192,7 +201,7 @@ pub struct Settings {
     #[default = false]
     pub defeat_hashihime_boss: bool,
 
-    /// Split on defeating Kaboto Yokozuma (the beatle).
+    /// Split on defeating Kaboto Yokozuma (the beetle).
     ///
     /// This is the fourth boss of the game Kaboto Yokozuma.
     #[default = false]
@@ -240,7 +249,7 @@ pub struct Settings {
     #[default = false]
     pub defeat_sakura_boss: bool,
 
-     /// Split on gaining atack ability.
+    /// Split on gaining atack ability.
     ///
     /// This is given once bamboo is collected for Asahi.
     #[default = false]
@@ -336,7 +345,7 @@ pub struct Settings {
     #[default = false]
     pub got_togichan_daruma: bool,
 
-     /// Split on credits appearing.
+    /// Split on credits appearing.
     ///
     /// This is once the game has been beaten.
     #[default = false]
@@ -346,44 +355,44 @@ pub struct Settings {
 #[allow(dead_code)]
 // TODO: If no file has been selected here are some suggestions
 pub const ANY_PERCENT: &[&str] = &[
-    "defeated_kirikiri_boss",        // KiriKiri Bozu split
-    "defeated_pua_boss",             // PUA defeated (armadillo) split
-    "rozus_requiem_start",           // Rozu's Requiem quest start
-    "defeat_hashihime_boss",         // Hashihime defeated (bridge) split
-    "vermilion_stranger_quest_end",  // Fast Travel split
-    "defeat_kaboto_boss",            // Yokozuna Kaboto (hover) split
-    "can_grapple",                   // Sheet music split
-    "can_idash",                     // Shade Cloak (i-dash) split
-    "can_hammer_dash",               // Dive (mallet dive) split
-    "defeat_jorogumo_boss",          // Spider boss split
-    "fox_wedding_end",               // Fox wedding split (Kitsune Kifuda, Ingenuity Omamori)
-    "can_wall_jump",                 // Wall jump split (West ice palace)
+    "defeated_kirikiri_boss",       // KiriKiri Bozu split
+    "defeated_pua_boss",            // PUA defeated (armadillo) split
+    "rozus_requiem_start",          // Rozu's Requiem quest start
+    "defeat_hashihime_boss",        // Hashihime defeated (bridge) split
+    "vermilion_stranger_quest_end", // Fast Travel split
+    "defeat_kaboto_boss",           // Yokozuna Kaboto (hover) split
+    "can_grapple",                  // Sheet music split
+    "can_idash",                    // Shade Cloak (i-dash) split
+    "can_hammer_dash",              // Dive (mallet dive) split
+    "defeat_jorogumo_boss",         // Spider boss split
+    "fox_wedding_end",              // Fox wedding split (Kitsune Kifuda, Ingenuity Omamori)
+    "can_wall_jump",                // Wall jump split (West ice palace)
     // "first_feather_key", // First feather (West ice palace)
-    "second_feather_key",            // DaiTangu second feather key (East ice palace)
-    "defeat_gash_boss",              // Defeat Gashadokuro skeleton
-    "first_elevator_up",             // Palace then enter first elevator
-    "defeat_ashai_boss",             // Defeat Asahi boss
-    "defeat_sakura_boss",            // Defeat Sakura Shogun final boss
-    "credits_roll",                  // Credits roll
+    "second_feather_key", // DaiTangu second feather key (East ice palace)
+    "defeat_gash_boss",   // Defeat Gashadokuro skeleton
+    "first_elevator_up",  // Palace then enter first elevator
+    "defeat_ashai_boss",  // Defeat Asahi boss
+    "defeat_sakura_boss", // Defeat Sakura Shogun final boss
+    "credits_roll",       // Credits roll
 ];
 
 #[allow(dead_code)]
 // TODO: Make this actually have the 100% splits
 pub const HUNDRED_PERCENT: &[&str] = &[
-    "can_bat", // KiriKiri Bozu split
-    "defeated_pua_boss", // PUA defeated (armadillo) split
-    "defeat_hashihime_boss", // Hashihime defeated (bridge) split
+    "can_bat",                      // KiriKiri Bozu split
+    "defeated_pua_boss",            // PUA defeated (armadillo) split
+    "defeat_hashihime_boss",        // Hashihime defeated (bridge) split
     "vermilion_stranger_quest_end", // Fast Travel split
-    "defeat_kaboto_boss", // Yokozuna Kaboto (hover) split
-    "can_grapple", // Sheet music split
-    "can_idash", // Shade Cloak (i-dash) split
-    "can_hammer_dash", // Dive (mallet dive) split
-    "defeat_jorogumo_boss", // Spider boss split
-    "fox_wedding_end", // Fox wedding split (Kitsune Kifuda, Ingenuity Omamori)
-    "can_wall_jump", // Wall jump split (West ice palace)
-    "second_feather_key", // DaiTangu second feather key (East ice palace)
-    "defeat_gash_boss", // Defeat Gashadokuro skeleton
-    "first_elevator_up", // Palace then enter first elevator
-    "defeat_ashai_boss", // Defeat Asahi boss
-    "defeat_sakura_boss", // Defeat Sakura Shogun final boss
+    "defeat_kaboto_boss",           // Yokozuna Kaboto (hover) split
+    "can_grapple",                  // Sheet music split
+    "can_idash",                    // Shade Cloak (i-dash) split
+    "can_hammer_dash",              // Dive (mallet dive) split
+    "defeat_jorogumo_boss",         // Spider boss split
+    "fox_wedding_end",              // Fox wedding split (Kitsune Kifuda, Ingenuity Omamori)
+    "can_wall_jump",                // Wall jump split (West ice palace)
+    "second_feather_key",           // DaiTangu second feather key (East ice palace)
+    "defeat_gash_boss",             // Defeat Gashadokuro skeleton
+    "first_elevator_up",            // Palace then enter first elevator
+    "defeat_ashai_boss",            // Defeat Asahi boss
+    "defeat_sakura_boss",           // Defeat Sakura Shogun final boss
 ];

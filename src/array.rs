@@ -55,7 +55,8 @@ impl<T: AnyBitPattern> CSharpArray<T> {
     {
         self.read(process)?
             .into_iter()
-            .map(|addr| read_fn(process, addr.into()).map_err(|_| ())).collect()
+            .map(|addr| read_fn(process, addr.into()).map_err(|_| ()))
+            .collect()
     }
 
     pub fn iter<'a>(&'a self, process: &'a Process) -> impl DoubleEndedIterator<Item = T> + 'a {

@@ -38,11 +38,7 @@ async fn main() {
     print_message("Bo AutoSplitter ON!!");
     let mut old_setting_file = None;
     let mut completed_splits = HashMap::new();
-    update_settings(
-        &mut settings,
-        &mut old_setting_file,
-        &mut completed_splits,
-    );
+    update_settings(&mut settings, &mut old_setting_file, &mut completed_splits);
 
     let process = Process::wait_attach("Bo.exe").await;
 
@@ -67,16 +63,24 @@ async fn main() {
                         old_scene_name = Some(name);
                     }
 
-                    let game_manager = GameManager::bind(&process, &module, &img).await;
+                    let game_manager_class = GameManager::bind(&process, &module, &img).await;
                     print_message("got GameManager");
-                    let game_manager_inst = game_manager
+                    let game_manager_inst = game_manager_class
                         .class()
                         .wait_get_static_instance(&process, &module, "instance")
                         .await;
                     print_message(&format!("got GameManager instance {:?}", game_manager_inst));
                     let mut old_game_manager = None;
-                    if let Ok(game_manager) = game_manager.read(&process, game_manager_inst) {
+                    if let Ok(game_manager) = game_manager_class.read(&process, game_manager_inst) {
                         print_message(&format!("{:#?}", game_manager));
+
+                        let qa_offset = game_manager_class.class().wait_get_field_offset(
+                            &process,
+                            &module,
+                            "<IsQABuild>k__BackingField",
+                        ).await;
+                        print_message(&format!("IsQABuild field addr: {:#?}", game_manager_inst + qa_offset));
+
                         old_game_manager = Some(game_manager);
                     }
 
@@ -183,9 +187,10 @@ async fn main() {
                         update_settings(&mut settings, &mut old_setting_file, &mut completed_splits);
 
                         // UPDATE first since this knows about everything
-                        match game_manager.read(&process, game_manager_inst) {
+                        match game_manager_class.read(&process, game_manager_inst) {
                             Ok(game_manager) if old_game_manager != Some(game_manager) => {
                                 print_message(&format!("{:#?}", game_manager));
+
                                 // This forces update to the QuestManager object, if it moves we must read from the new address
                                 match old_game_manager.map(|gm| gm.quest_pointer) {
                                     Some(old_quest_ptr)
@@ -398,6 +403,8 @@ async fn main() {
 
                                 // Fox wedding quest started
                                 check_quest!(fox_wedding_start, "fox wedding start");
+                                 // Fox wedding save groom
+                                 check_quest!(fox_wedding_save_groom, "fox wedding save groom");
                                 // Fox wedding quest complete
                                 check_quest!(fox_wedding_end, "fox wedding end");
 
@@ -409,6 +416,8 @@ async fn main() {
                                     "second feather key inserted"
                                 );
 
+                                // Defeated Kaboto (beetle)
+                                check_quest!(defeat_kaboto_boss, "Kaboto defeated");
                                 // Credits roll you did it
                                 check_quest!(credits_roll, "done");
 

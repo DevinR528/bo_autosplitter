@@ -239,9 +239,12 @@ pub struct QuestManager {
     /// The Fox wedding quest start, get Kitsune scroll and Ingenuity Omamori.
     #[rename = "<KitsuneKifudaQuestStarted>k__BackingField"]
     pub fox_wedding_start: bool,
-    /// The Fox wedding quest end, get Kitsune scroll and Ingenuity Omamori.
-    #[rename = "<KitsuneKifudaQuestCompleted>k__BackingField"]
-    pub fox_wedding_end: bool,
+    /// The Fox wedding quest, saving groom from spider.
+    #[rename = "<GroomAscentCompleted>k__BackingField"]
+    pub fox_wedding_save_groom: bool,
+     /// The Fox wedding quest end, get Kitsune scroll and Ingenuity Omamori.
+     #[rename = "<KitsuneKifudaQuestCompleted>k__BackingField"]
+     pub fox_wedding_end: bool,
 
     /// The Vermilion Stranger quest start (this gives fast travel)
     #[rename = "<VermillionStrangerQuestStarted>k__BackingField"]
@@ -266,8 +269,7 @@ pub struct QuestManager {
     #[rename = "<HashihimeDefeated>k__BackingField"]
     pub defeat_hashihime_boss: bool,
 
-    // TODO: missing Kitsura (the nine tails thing)
-    /// This is the fourth boss in the game "Kaboto Yokozuma" (the beatle)
+    /// This is the fourth boss in the game "Kaboto Yokozuma" (the beetle)
     #[rename = "<YokozumaCompleted>k__BackingField"]
     pub defeat_kaboto_boss: bool,
 
@@ -339,4 +341,10 @@ pub struct GameManager {
     pub enemies_pointer: Address64,
     #[rename = "darumaManager"]
     pub daruma_pointer: Address64,
+
+    #[rename = "<IsQABuild>k__BackingField"]
+    pub qa_build: bool,
+
+    #[rename = "<savingShrinePos>k__BackingField"]
+    pub shrine_pos: [f32; 2],
 }
