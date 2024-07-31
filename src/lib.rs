@@ -37,14 +37,10 @@ async fn main() {
 
     print_message("Bo AutoSplitter ON!!");
     let mut old_setting_file = None;
-    let mut should_read_settings = true;
-
-    // TODO: should probably move `settings.update()` into the function call `update_settings()`
     let mut completed_splits = HashMap::new();
     update_settings(
         &mut settings,
         &mut old_setting_file,
-        &mut should_read_settings,
         &mut completed_splits,
     );
 
@@ -167,6 +163,7 @@ async fn main() {
 
                     #[allow(unused_labels)]
                     'normal_game_loop: loop {
+                        // Check for a complete run to reset the completed splits map
                         match timer::state() {
                             TimerState::NotRunning
                             | TimerState::Running
@@ -182,7 +179,8 @@ async fn main() {
                             // non_exhaustive
                             _ => {}
                         }
-                        update_settings(&mut settings, &mut old_setting_file, &mut should_read_settings, &mut completed_splits);
+                        // This checks for on the fly updates to the settings (you could add a split mid run)
+                        update_settings(&mut settings, &mut old_setting_file, &mut completed_splits);
 
                         // UPDATE first since this knows about everything
                         match game_manager.read(&process, game_manager_inst) {
@@ -417,7 +415,7 @@ async fn main() {
                                 old_quest_manager = Some(quest_manager);
                             }
                             Err(err) => {
-                                print_message(&format!(
+                                asr::print_message(&format!(
                                     "quest manager ERROR: {:?}\n{:?}",
                                     err, old_game_manager
                                 ));
@@ -476,7 +474,7 @@ async fn main() {
 
                                 old_ability_manager = Some(ability_manager);
                             }
-                            Err(err) => print_message(&format!(
+                            Err(err) => asr::print_message(&format!(
                                 "ability manager ERROR: {:?} \n{:?}",
                                 err, old_game_manager
                             )),
@@ -524,7 +522,7 @@ async fn main() {
 
                                 old_inventory_container = Some(inventory_container);
                             }
-                            Err(err) => print_message(&format!(
+                            Err(err) => asr::print_message(&format!(
                                 "inventory manager ERROR: {:?} \n{:?}",
                                 err, old_game_manager
                             )),
@@ -539,7 +537,7 @@ async fn main() {
 
                                 old_enemies_manager = Some(enemies_manager);
                             }
-                            Err(err) => print_message(&format!(
+                            Err(err) => asr::print_message(&format!(
                                 "enemies manager ERROR: {:?} \n{:?}",
                                 err, old_game_manager
                             )),
@@ -729,19 +727,19 @@ async fn get_daruma_data_array(
 fn update_settings(
     settings: &mut Settings,
     old_lss_file: &mut Option<String>,
-    should_read_settings: &mut bool,
     completed: &mut HashMap<String, bool>,
 ) {
     settings.update();
 
-    if !settings.lss_file.path.is_empty() && *should_read_settings {
+    if (!settings.lss_file.path.is_empty() && old_lss_file.is_none())
+        || (old_lss_file.is_some() && old_lss_file.as_ref() != Some(&settings.lss_file.path))
+    {
         if read_settings_xml(settings).is_err() {
-            print_message(&format!(
+            asr::print_message(&format!(
                 "Error: reading xml settings file '{}'",
                 settings.lss_file.path
             ));
         } else {
-            *should_read_settings = false;
             *old_lss_file = Some(settings.lss_file.path.clone());
 
             print_message(&format!("Updated map (read file) {:#?}", Map::load()));
@@ -772,51 +770,26 @@ fn read_settings_xml(settings: &Settings) -> Result<(), ()> {
             for ev_result in parser {
                 match ev_result {
                     Ok(ev) => {
-                        if settings.lss_file.path.ends_with(".lsl") {
-                            match_lsl_xml(
-                                ev,
-                                &map,
-                                &mut current_name,
-                                &mut in_splits,
-                                &mut in_autosplitter,
-                            );
-                        } else {
-                            match_lss_xml(ev, &map, &mut in_splits, &mut in_autosplitter);
-                        }
+                        match_xml(
+                            ev,
+                            &map,
+                            &mut current_name,
+                            &mut in_splits,
+                            &mut in_autosplitter,
+                        );
                     }
-                    Err(err) => print_message(&format!("Error in read: {}", err)),
+                    Err(err) => asr::print_message(&format!("Error in read: {}", err)),
                 }
             }
             map.store();
         }
-        Err(e) => print_message(&format!("Error in read: {}", e)),
+        Err(e) => asr::print_message(&format!("Error in read: {}", e)),
     }
 
     Ok(())
 }
 
-fn match_lss_xml(e: ReaderEvent, map: &Map, in_splits: &mut bool, in_autosplitter: &mut bool) {
-    match &e {
-        ReaderEvent::StartElement { name, .. } if name.local_name == "AutoSplitterSettings" => {
-            *in_autosplitter = true;
-        }
-        ReaderEvent::StartElement { name, .. } if name.local_name == "Split" => {
-            *in_splits = true;
-        }
-        ReaderEvent::Characters(val) if *in_autosplitter && *in_splits => {
-            map.insert(val, true);
-        }
-        ReaderEvent::EndElement { name } if name.local_name == "AutoSplitterSettings" => {
-            *in_autosplitter = false;
-        }
-        ReaderEvent::EndElement { name } if name.local_name == "Split" => {
-            *in_splits = false;
-        }
-        _ => {}
-    }
-}
-
-fn match_lsl_xml(
+fn match_xml(
     e: ReaderEvent,
     map: &Map,
     current_name: &mut Option<String>,
@@ -831,14 +804,26 @@ fn match_lsl_xml(
             name, attributes, ..
         } if name.local_name == "Setting" => {
             print_message(&format!("{:?}", attributes));
-            if attributes
-                .first()
-                .map(|attr| attr.name.local_name == "id" && !attr.value.is_empty())
-                .unwrap_or(false)
-            {
-                *current_name = attributes.first().map(|attr| attr.value.clone());
+            if let Some(attr) = attributes.first().filter(|attr| {
+                attr.name.local_name == "id" && !attr.value.is_empty() && attr.value != "lss_file"
+            }) {
+                *current_name = Some(attr.value.clone());
+                *in_splits = true;
             }
-            *in_splits = true;
+
+            if let Some(attr) = attributes
+                .first()
+                // The first attribute has the key (we know it to be lss_file)
+                .filter(|attr| attr.name.local_name == "id" && attr.value == "lss_file")
+                .and_then(|_| attributes.last())
+                // Last attribute has the name of the file
+                .filter(|attr| attr.name.local_name == "value" && !attr.value.is_empty())
+            {
+                map.insert("lss_file", attr.value.as_str());
+                // We know this has no Characters() event next so skip it
+                *in_splits = false;
+                *current_name = None;
+            }
         }
         ReaderEvent::Characters(val)
             if *in_autosplitter && *in_splits && current_name.is_some() =>
@@ -849,7 +834,7 @@ fn match_lsl_xml(
         ReaderEvent::EndElement { name } if name.local_name == "CustomSettings" => {
             *in_autosplitter = false;
         }
-        ReaderEvent::EndElement { name } if name.local_name == "Split" => {
+        ReaderEvent::EndElement { name } if name.local_name == "Setting" => {
             *in_splits = false;
         }
         _ => {}
