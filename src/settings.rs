@@ -12,13 +12,23 @@ pub enum Category {
     HundredPercent,
 }
 
+#[derive(Gui, Debug, PartialEq, Eq, Clone, Copy)]
+pub enum NumberOfKodamas {
+    /// Do not split for Kodama's found.
+    #[default]
+    NoSplit,
+    /// Split every time a Kodama is found.
+    EveryOne,
+    /// Split every 5 Kodama's found.
+    EveryFive,
+    /// Split every 10 Kodama's found, this also splits on 35 (the total).
+    EveryTen,
+}
+
 #[derive(Gui)]
 pub struct Settings {
     /// General Settings
     _general_settings: Title,
-
-    /// Select your category, the default splits will be selected for you.
-    pub category: Category,
 
     /// Select your splits file.
     ///
@@ -350,6 +360,11 @@ pub struct Settings {
     /// This is once the game has been beaten.
     #[default = false]
     pub credits_roll: bool,
+
+    /// Split on some number of Kodama's found.
+    ///
+    /// These are the little turnup things that you pull out of the ground to build stuff.
+    pub number_of_kodamas: NumberOfKodamas,
 }
 
 #[allow(dead_code)]

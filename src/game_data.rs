@@ -143,6 +143,9 @@ pub struct InventoryContainer {
 
     #[rename = "<InscrutableTableFragment>k__BackingField"]
     pub tablets: i32,
+
+    #[rename = "<Kodamas>k__BackingField"]
+    pub number_of_kodamas: i32,
 }
 
 #[derive(Debug, Class, Copy, Clone, PartialEq, Eq)]
@@ -242,9 +245,9 @@ pub struct QuestManager {
     /// The Fox wedding quest, saving groom from spider.
     #[rename = "<GroomAscentCompleted>k__BackingField"]
     pub fox_wedding_save_groom: bool,
-     /// The Fox wedding quest end, get Kitsune scroll and Ingenuity Omamori.
-     #[rename = "<KitsuneKifudaQuestCompleted>k__BackingField"]
-     pub fox_wedding_end: bool,
+    /// The Fox wedding quest end, get Kitsune scroll and Ingenuity Omamori.
+    #[rename = "<KitsuneKifudaQuestCompleted>k__BackingField"]
+    pub fox_wedding_end: bool,
 
     /// The Vermilion Stranger quest start (this gives fast travel)
     #[rename = "<VermillionStrangerQuestStarted>k__BackingField"]
