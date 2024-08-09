@@ -27,7 +27,7 @@ jobs:
 
       - name: Build
         run: |
-          cargo b --release --locked
+          cargo build --release --locked --target wasm32-wasi
 
       - name: Release
         if: github.ref == 'refs/heads/main'
