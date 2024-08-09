@@ -150,6 +150,30 @@ pub struct Settings {
     #[default = false]
     pub vermilion_stranger_quest_end: bool,
 
+    /// Split on starting Kitsune Kifuda Quest.
+    ///
+    /// This is the quest where you get the scroll from DaiTangu to "kill" Gashadoku.
+    #[default = false]
+    pub kitsune_kifuda_start: bool,
+
+    /// Split on completing Kitsune Kifuda Quest.
+    ///
+    /// This is the quest where you get the scroll from DaiTangu to "kill" Gashadoku.
+    #[default = false]
+    pub kitsune_kifuda_end: bool,
+
+    /// Split on starting Infinite Tea Kettle Quest.
+    ///
+    /// This is the quest where you find all the tea kettle pieces.
+    #[default = false]
+    pub infinite_kettle_start: bool,
+
+    /// Split on completing Infinite Tea Kettle Quest.
+    ///
+    /// This is the quest where you find all the tea kettle pieces.
+    #[default = false]
+    pub infinite_kettle_end: bool,
+
     /// Split on entering the first palace elevator.
     ///
     /// This is the first elevator when entering the castle.

@@ -256,6 +256,20 @@ pub struct QuestManager {
     #[rename = "<VSQuestCompleted>k__BackingField"]
     pub vermilion_stranger_quest_end: bool,
 
+    /// The Kitsune Kifuda quest (DaiTangu and Gashadoku)
+    #[rename = "<KitsuneKifudaQuestStarted>k__BackingField"]
+    pub kitsune_kifuda_start: bool,
+    /// The Kitsune Kifuda quest (DaiTangu and Gashadoku)
+    #[rename = "<KitsuneKifudaQuestCompleted>k__BackingField"]
+    pub kitsune_kifuda_end: bool,
+
+    /// The Infinite Tea Kettle Quest.
+    #[rename = "<InfiniteKettleQuestStarted>k__BackingField"]
+    pub infinite_kettle_start: bool,
+    /// The Infinite Tea Kettle Quest.
+    #[rename = "<InfiniteKettleQuestCompleted>k__BackingField"]
+    pub infinite_kettle_end: bool,
+
     /// Inserting the feather from the west side of white --- I mean ice palace into the keyhole
     #[rename = "<FirstFeatherKeyEntered>k__BackingField"]
     pub west_feather_in_keyhole: bool,

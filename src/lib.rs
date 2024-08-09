@@ -408,6 +408,16 @@ async fn main() {
                                     // Fox wedding quest complete
                                     check_quest!(fox_wedding_end, "fox wedding end");
 
+                                    // The Kitsune Kifuda quest start (DaiTangu and Gashadoku)
+                                    check_quest!(kitsune_kifuda_start, "Kitsune Kifuda quest start");
+                                    // The Kitsune Kifuda quest end (DaiTangu and Gashadoku)
+                                    check_quest!(kitsune_kifuda_end, "Kitsune Kifuda quest end");
+
+                                    // The Infinite Tea Kettle quest
+                                    check_quest!(infinite_kettle_start, "Infinite Tea Kettle quest quest start");
+                                    // The Infinite Tea Kettle quest
+                                    check_quest!(infinite_kettle_end, "Infinite Tea Kettle quest end");
+
                                     // First feather key inserted
                                     check_quest!(west_feather_in_keyhole, "first feather key inserted");
                                     // Second feather key inserted
