@@ -59,6 +59,7 @@ impl<T: AnyBitPattern> CSharpArray<T> {
             .collect()
     }
 
+    #[allow(dead_code)]
     pub fn iter<'a>(&'a self, process: &'a Process) -> impl DoubleEndedIterator<Item = T> + 'a {
         let count = self.count(process).unwrap_or_default();
         (0..count).filter_map(move |val| {
