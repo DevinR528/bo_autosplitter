@@ -358,10 +358,4 @@ pub struct GameManager {
     pub enemies_pointer: Address64,
     #[rename = "darumaManager"]
     pub daruma_pointer: Address64,
-
-    #[rename = "<IsQABuild>k__BackingField"]
-    pub qa_build: bool,
-
-    #[rename = "<savingShrinePos>k__BackingField"]
-    pub shrine_pos: [f32; 2],
 }

@@ -27,7 +27,7 @@ use settings::{NumberOfKodamas, Settings};
 asr::async_main!(stable);
 
 fn print_message(msg: &str) {
-    #[cfg(debug_assertions)]
+    // #[cfg(debug_assertions)]
     asr::print_message(msg);
 }
 
