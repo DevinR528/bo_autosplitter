@@ -108,6 +108,12 @@ pub struct Settings {
     #[default = false]
     pub second_feather_key: bool,
 
+    /// Split on obtaining the scuffed gunbai.
+    ///
+    /// Upon obtaining the scuffed gunbai.
+    #[default = false]
+    pub has_scuffed_gunbai: bool,
+
     /// Split on starting the Vermilion Stranger quest.
     ///
     /// This quest gives fast travel.
@@ -246,6 +252,12 @@ pub struct Settings {
     /// This is the fifth boss of the game Jorogumo.
     #[default = false]
     pub defeat_jorogumo_boss: bool,
+
+    /// Split on defeating Kitsura (the fox).
+    ///
+    /// This is the extra boss in the game Kitsura.
+    #[default = false]
+    pub defeat_yuki_boss: bool,
 
     /// Split on defeating KarasuTengu the single bird Tengu.
     ///

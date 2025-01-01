@@ -36,15 +36,18 @@ async fn main() {
     let mut settings = Settings::register();
 
     print_message("Bo AutoSplitter ON!!");
-    let mut old_setting_file = None;
-    let mut completed_splits = HashMap::new();
-    update_settings(&mut settings, &mut old_setting_file, &mut completed_splits);
+    // let mut old_setting_file = None;
+    // let mut completed_splits = HashMap::new();
+    // update_settings(&mut settings, &mut old_setting_file, &mut completed_splits);
 
     loop {
         let process = Process::wait_attach("Bo.exe").await;
         process
             .until_closes(async {
                 'start_over: loop {
+                    let mut old_setting_file = None;
+                    let mut completed_splits = HashMap::new();
+                    update_settings(&mut settings, &mut old_setting_file, &mut completed_splits);
                     let module = Module::wait_attach_auto_detect(&process).await;
                     print_message("Found mono");
                     let img = module.wait_get_default_image(&process).await;
@@ -169,17 +172,18 @@ async fn main() {
                         'normal_game_loop: loop {
                             // Check for a complete run to reset the completed splits map
                             match timer::state() {
-                                TimerState::NotRunning
                                 | TimerState::Running
                                 | TimerState::Paused => {},
-                                TimerState::Ended => {
+                                | TimerState::Ended
+                                | TimerState::NotRunning => {
                                     // reset completed splits and any other settings
                                     completed_splits.clear();
+                                    asr::print_message("clearing completed splits");
                                     paused = false;
                                 },
                                 TimerState::Unknown => {
                                     asr::print_message("TimerState::Unknown...");
-                                },
+                                }, 
                                 // non_exhaustive
                                 _ => {}
                             }
@@ -391,15 +395,9 @@ async fn main() {
                                     check_quest!(rozus_requiem_end, "Rozu's Requiem Quest end");
 
                                     // Vermilion Stranger quest start
-                                    check_quest!(
-                                        vermilion_stranger_quest_start,
-                                        "Vermilion Stranger quest start"
-                                    );
+                                    check_quest!(vermilion_stranger_quest_start, "Vermilion Stranger quest start");
                                     // Vermilion Stranger quest end
-                                    check_quest!(
-                                        vermilion_stranger_quest_end,
-                                        "Vermilion Stranger quest end"
-                                    );
+                                    check_quest!(vermilion_stranger_quest_end, "Vermilion Stranger quest end");
 
                                     // Fox wedding quest started
                                     check_quest!(fox_wedding_start, "fox wedding start");
@@ -421,13 +419,12 @@ async fn main() {
                                     // First feather key inserted
                                     check_quest!(west_feather_in_keyhole, "first feather key inserted");
                                     // Second feather key inserted
-                                    check_quest!(
-                                        east_feather_in_keyhole,
-                                        "second feather key inserted"
-                                    );
+                                    check_quest!(east_feather_in_keyhole, "second feather key inserted");
 
                                     // Defeated Kaboto (beetle)
                                     check_quest!(defeat_kaboto_boss, "Kaboto defeated");
+                                    // Defeated Gashadokuro
+                                    check_quest!(defeat_gash_boss, "Gashadokuro defeated");
                                     // Credits roll you did it
                                     check_quest!(credits_roll, "done");
 
@@ -528,7 +525,44 @@ async fn main() {
                                                 _ => {}
                                             }
                                         };
+                                        (Some($case:tt), $field:ident, $setting:ident, $msg:expr) => {
+                                            match old_inventory_container.map(|am| am.$field) {   
+                                                Some($case)
+                                                    if inventory_container.$field
+                                                        && settings.$setting
+                                                        && !completed_splits
+                                                            .get(stringify!($setting))
+                                                            .copied()
+                                                            .unwrap_or(true) =>
+                                                {
+                                                    print_message(concat!("Split for ", $msg));
+                                                    *completed_splits
+                                                        .entry(stringify!($setting).to_string())
+                                                        .or_insert(true) = true;
+                                                    timer::split();
+                                                }
+                                                    _ => {}
+                                            }
+                                        };
                                     }
+                                    //macro_rules! check_lost_inventory {
+                                    //    ($setting:ident, $cond_field:ident, $msg:expr) => {
+                                    //        if old_inventory_container.$cond_field
+                                    //            && !inventory_container.$cond_field
+                                    //            && settings.$setting
+                                    //            && !completed_splits
+                                    //                .get(stringify!($setting))
+                                    //                .copied()
+                                    //                .unwrap_or(true)
+                                    //        {
+                                    //            print_message(concat!("Split for losing ", $msg));
+                                    //            *completed_splits
+                                    //                .entry(stringify!($cond_field).to_string())
+                                    //                .or_insert(true) = true;
+                                    //            timer::split();
+                                    //        }
+                                    //    };
+                                    //}
 
                                     check_inventory!(Some(0), feather_keys == 1, first_feather_key, "first feather");
                                     check_inventory!(Some(1), feather_keys == 2, second_feather_key, "second feather");
@@ -538,6 +572,7 @@ async fn main() {
                                     check_inventory!(Some(2), tablets == 3, three_vs_tablet, "third VS tablet");
                                     check_inventory!(Some(3), tablets == 4, four_vs_tablet, "fourth VS tablet");
                                     check_inventory!(Some(4), tablets == 5, five_vs_tablet, "fifth VS tablet");
+                                    check_inventory!(Some(_has_scuffed_gunbai), has_scuffed_gunbai, has_scuffed_gunbai, "scuffed gunbai");
 
                                     match old_inventory_container.map(|am| am.number_of_kodamas) {
                                         Some(old_number)
@@ -679,18 +714,15 @@ async fn main() {
                                                 BossKind::KiriKiriBozu => check_boss!(defeated_kirikiri_boss, "KiriKiri Bozu defeated"),
                                                 BossKind::PUA => check_boss!(defeated_pua_boss, "PUA defeated split"),
                                                 BossKind::Hashihime => check_boss!(defeat_hashihime_boss, "Hashihime defeated"),
-                                                BossKind::Yuki => {
-                                                    // TODO: who dis...
-                                                    print_message(&format!("Yuki boss matched: {:#?}\n{:#?}", new_boss, old_boss));
-                                                },
-                                                BossKind::Yokozuna => check_boss!(defeat_kaboto_boss, "Yokozuna defeated split"),
+                                                BossKind::Yuki => check_boss!(defeat_yuki_boss, "Kitsura defeated"),
+                                                BossKind::Yokozuna => {}, // check_boss!(defeat_kaboto_boss, "Yokozuna defeated split"),
                                                 BossKind::Jorogumo => check_boss!(defeat_jorogumo_boss, "Jorojumo defeated"),
                                                 BossKind::KarasuTengu => {
                                                     check_boss!(defeat_karasu_tengu_one_boss, total_health == 133.0, "KarasuTengu single defeated");
                                                     check_boss!(defeat_karasu_tengu_two_boss, total_health == 225.0, "KarasuTengu duo defeated");
                                                 }
                                                 BossKind::DaiTengu => check_boss!(defeat_dai_tengu_boss, "DaiTengu (Tengu Trio) defeated"),
-                                                BossKind::Gasha => check_boss!(defeat_gash_boss, "Gashadokuro defeated"),
+                                                BossKind::Gasha => {}, // check_boss!(defeat_gash_boss, "Gashadokuro defeated"),
                                                 BossKind::Asahi => check_boss!(defeat_ashai_boss, "Asahi defeated"),
                                                 BossKind::Shogun => check_boss!(defeat_sakura_boss, "Sakura Shogun defeated"),
                                                 // TODO: who dis...
