@@ -297,10 +297,6 @@ pub struct QuestManager {
     #[rename = "<DefeatedJorogumo>k__BackingField"]
     pub defeat_spider_boss: bool,
 
-    /// This is the extra boss in the game "Kitsura" (the spider)
-    #[rename = "<DefeatedYuki>k__BackingField"]
-    pub defeat_yuki_boss: bool,
-
     /// This is the sixth boss in the game "Tengu" (the 3 bird warriors)
     #[rename = "<TenguTrialQuestCompleted>k__BackingField"]
     pub defeat_tengu_boss: bool,
