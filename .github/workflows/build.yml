@@ -23,7 +23,7 @@ jobs:
         with:
           components: rust-src
           rust-version: nightly
-          targets: wasm32-wasi
+          targets: wasm32-wasip1
 
       - name: Build
         run: |
