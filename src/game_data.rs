@@ -138,6 +138,9 @@ pub struct InventoryContainer {
     #[rename = "<HasKitsuneKifuda>k__BackingField"]
     pub has_kitsune_kifuda: bool,
 
+    #[rename = "<HasScuffedGunbai>k__BackingField"]
+    pub has_scuffed_gunbai: bool,
+
     #[rename = "<BaseDamage>k__BackingField"]
     pub base_damage: f32,
 
@@ -240,13 +243,13 @@ pub struct QuestManager {
     pub rozus_requiem_end: bool,
 
     /// The Fox wedding quest start, get Kitsune scroll and Ingenuity Omamori.
-    #[rename = "<KitsuneKifudaQuestStarted>k__BackingField"]
+    #[rename = "<FoxWeddingQuestStarted>k__BackingField"]
     pub fox_wedding_start: bool,
     /// The Fox wedding quest, saving groom from spider.
     #[rename = "<GroomAscentCompleted>k__BackingField"]
     pub fox_wedding_save_groom: bool,
     /// The Fox wedding quest end, get Kitsune scroll and Ingenuity Omamori.
-    #[rename = "<KitsuneKifudaQuestCompleted>k__BackingField"]
+    #[rename = "<FoxWeddingQuestCompleted>k__BackingField"]
     pub fox_wedding_end: bool,
 
     /// The Vermilion Stranger quest start (this gives fast travel)

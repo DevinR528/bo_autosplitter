@@ -42,9 +42,9 @@ pub struct Settings {
     #[default = false]
     pub asahi_staff_start: bool,
 
-    /// Split on completing Ashai's staff quest.
+    /// Split on completing Asahi's staff quest.
     ///
-    /// This is the quest where you collect bamboo to get past Ashai (your first encounter).
+    /// This is the quest where you collect bamboo to get past Asahi (your first encounter).
     #[default = false]
     pub asahi_staff_end: bool,
 
@@ -54,7 +54,7 @@ pub struct Settings {
     #[default = false]
     pub asahi_eye_of_beast_start: bool,
 
-    /// Split on completing Ashai's Eye of Beast quest.
+    /// Split on completing Asahi's Eye of Beast quest.
     ///
     /// This is the quest where you collect an eye for your kettle (your second encounter).
     #[default = false]
@@ -108,6 +108,12 @@ pub struct Settings {
     #[default = false]
     pub second_feather_key: bool,
 
+    /// Split on obtaining the scuffed gunbai.
+    ///
+    /// Upon obtaining the scuffed gunbai.
+    #[default = false]
+    pub has_scuffed_gunbai: bool,
+
     /// Split on starting the Vermilion Stranger quest.
     ///
     /// This quest gives fast travel.
@@ -152,13 +158,13 @@ pub struct Settings {
 
     /// Split on starting Kitsune Kifuda Quest.
     ///
-    /// This is the quest where you get the scroll from DaiTangu to "kill" Gashadoku.
+    /// This is the quest where you get the scroll from DaiTangu to "kill" Gashadokuro.
     #[default = false]
     pub kitsune_kifuda_start: bool,
 
     /// Split on completing Kitsune Kifuda Quest.
     ///
-    /// This is the quest where you get the scroll from DaiTangu to "kill" Gashadoku.
+    /// This is the quest where you get the scroll from DaiTangu to "kill" Gashadokuro.
     #[default = false]
     pub kitsune_kifuda_end: bool,
 
@@ -219,7 +225,6 @@ pub struct Settings {
     /// Split on defeating Kiri Kiri Bozu.
     ///
     /// This is the first boss of the game KiriKiri Bozu.
-    /// TODO: currently there is no split for this.
     #[default = false]
     pub defeated_kirikiri_boss: bool,
 
@@ -247,6 +252,12 @@ pub struct Settings {
     #[default = false]
     pub defeat_jorogumo_boss: bool,
 
+    /// Split on defeating Kitsura (the fox).
+    ///
+    /// This is the fox boss in the game Kitsura.
+    #[default = false]
+    pub defeat_yuki_boss: bool,
+
     /// Split on defeating KarasuTengu the single bird Tengu.
     ///
     /// This is the first Tengu of the Trio.
@@ -271,7 +282,7 @@ pub struct Settings {
     #[default = false]
     pub defeat_gash_boss: bool,
 
-    /// Split on defeating Ashai.
+    /// Split on defeating Asahi.
     ///
     /// This is the second to last boss of the game.
     #[default = false]
@@ -283,7 +294,7 @@ pub struct Settings {
     #[default = false]
     pub defeat_sakura_boss: bool,
 
-    /// Split on gaining atack ability.
+    /// Split on gaining attack ability.
     ///
     /// This is given once bamboo is collected for Asahi.
     #[default = false]
