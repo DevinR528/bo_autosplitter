@@ -42,9 +42,9 @@ pub struct Settings {
     #[default = false]
     pub asahi_staff_start: bool,
 
-    /// Split on completing Ashai's staff quest.
+    /// Split on completing Asahi's staff quest.
     ///
-    /// This is the quest where you collect bamboo to get past Ashai (your first encounter).
+    /// This is the quest where you collect bamboo to get past Asahi (your first encounter).
     #[default = false]
     pub asahi_staff_end: bool,
 
@@ -54,7 +54,7 @@ pub struct Settings {
     #[default = false]
     pub asahi_eye_of_beast_start: bool,
 
-    /// Split on completing Ashai's Eye of Beast quest.
+    /// Split on completing Asahi's Eye of Beast quest.
     ///
     /// This is the quest where you collect an eye for your kettle (your second encounter).
     #[default = false]
@@ -83,36 +83,6 @@ pub struct Settings {
     /// This is the quest where the demo ended (bunny gives you a note).
     #[default = false]
     pub rozus_requiem_end: bool,
-
-    /// Split on inserting the first feather in keyhole.
-    ///
-    /// Upon inserting the first key into the west keyhole.
-    #[default = false]
-    pub west_feather_in_keyhole: bool,
-
-    /// Split on inserting the second feather in keyhole.
-    ///
-    /// Upon inserting the second key into the east keyhole.
-    #[default = false]
-    pub east_feather_in_keyhole: bool,
-
-    /// Split on obtaining the first feather.
-    ///
-    /// Upon obtaining the west side feather.
-    #[default = false]
-    pub first_feather_key: bool,
-
-    /// Split on obtaining the second feather.
-    ///
-    /// Upon obtaining the east side feather.
-    #[default = false]
-    pub second_feather_key: bool,
-
-    /// Split on obtaining the scuffed gunbai.
-    ///
-    /// Upon obtaining the scuffed gunbai.
-    #[default = false]
-    pub has_scuffed_gunbai: bool,
 
     /// Split on starting the Vermilion Stranger quest.
     ///
@@ -156,15 +126,63 @@ pub struct Settings {
     #[default = false]
     pub vermilion_stranger_quest_end: bool,
 
+    /// Split on starting the fox wedding quest.
+    ///
+    /// This splits on starting of the fox wedding quest.
+    #[default = false]
+    pub fox_wedding_start: bool,
+
+    /// Split on saving the groom from Jorogumo.
+    ///
+    /// This splits on saving the Fox from the burrows spider Jorogumo.
+    #[default = false]
+    pub fox_wedding_save_groom: bool,
+
+    /// Split on finishing the fox wedding quest.
+    ///
+    /// This splits on completion of the fox wedding quest.
+    #[default = false]
+    pub fox_wedding_end: bool,
+
+    /// Split on obtaining the scuffed gunbai.
+    ///
+    /// Upon obtaining the scuffed gunbai.
+    #[default = false]
+    pub has_scuffed_gunbai: bool,
+
+    /// Split on inserting the first feather in keyhole.
+    ///
+    /// Upon inserting the first key into the west keyhole.
+    #[default = false]
+    pub west_feather_in_keyhole: bool,
+
+    /// Split on inserting the second feather in keyhole.
+    ///
+    /// Upon inserting the second key into the east keyhole.
+    #[default = false]
+    pub east_feather_in_keyhole: bool,
+
+    /// Split on obtaining the first feather.
+    ///
+    /// Upon obtaining the west side feather.
+    #[default = false]
+    pub first_feather_key: bool,
+
+    /// Split on obtaining the second feather.
+    ///
+    /// Upon obtaining the east side feather.
+    #[default = false]
+    pub second_feather_key: bool,
+
     /// Split on starting Kitsune Kifuda Quest.
     ///
-    /// This is the quest where you get the scroll from DaiTangu to "kill" Gashadoku.
+    /// This is the quest where you get the scroll from DaiTangu to "kill" Gashadokuro.
     #[default = false]
     pub kitsune_kifuda_start: bool,
 
     /// Split on completing Kitsune Kifuda Quest.
     ///
-    /// This is the quest where you get the scroll from DaiTangu to "kill" Gashadoku.
+    /// This is the quest where you get the scroll from DaiTangu to "kill" Gashadokuro.
     #[default = false]
     pub kitsune_kifuda_end: bool,
 
@@ -179,6 +197,198 @@ pub struct Settings {
     /// This is the quest where you find all the tea kettle pieces.
     #[default = false]
     pub infinite_kettle_end: bool,
+
+    /// Split on defeating Kiri Kiri Bozu.
+    ///
+    /// This is the first boss of the game KiriKiri Bozu.
+    #[default = false]
+    pub defeated_kirikiri_boss: bool,
+
+    /// Split on entering Particularly Unmanageable Armadillo arena.
+    ///
+    /// This is a room split for Particularly Unmanageable Armadillo's arena.
+    #[default = false]
+    pub uc_boss: bool,
+
+    /// Split on defeating Particularly Unmanageable Armadillo.
+    ///
+    /// This is the second boss of the game Particularly Unmanageable Armadillo.
+    #[default = false]
+    pub defeated_pua_boss: bool,
+
+    /// Split on entering Hashihime arena.
+    ///
+    /// This is a room split for entering Hashihime's arena.
+    #[default = false]
+    pub sbhh: bool,
+
+    /// Split on defeating Hashihime.
+    ///
+    /// This is the third boss of the game Hashihime.
+    #[default = false]
+    pub defeat_hashihime_boss: bool,
+
+    /// Split on entering Kabuto Yokozuna's arena.
+    ///
+    /// This is a room split for Kabuto Yokozuna's arena.
+    #[default = false]
+    pub mm_yokozuna: bool,
+
+    /// Split on defeating Kabuto Yokozuna (the beetle).
+    ///
+    /// This is the fourth boss of the game Kabuto Yokozuna.
+    #[default = false]
+    pub defeat_kaboto_boss: bool,
+
+    /// Split on entering Jorogumo's arena.
+    ///
+    /// This is a room split for entering Jorogumo's arena.
+    #[default = false]
+    pub kb_jorogumo: bool,
+
+    /// Split on defeating Jorogumo (the spider).
+    ///
+    /// This is the fifth boss of the game Jorogumo.
+    #[default = false]
+    pub defeat_jorogumo_boss: bool,
+
+    /// Split on entering Kitsura's arena.
+    ///
+    /// This is a room split for Kitsura's arena.
+    #[default = false]
+    pub mf_boss: bool,
+
+    /// Split on defeating Kitsura (the fox).
+    ///
+    /// This is the fox boss in the game Kitsura.
+    #[default = false]
+    pub defeat_yuki_boss: bool,
+
+    /// Split on entering Tengu solo arena.
+    ///
+    /// This is a room split for entering Tengu solo arena.
+    #[default = false]
+    pub ic_tengu1: bool,
+
+    /// Split on defeating KarasuTengu the single bird Tengu.
+    ///
+    /// This is the first Tengu of the Trio.
+    #[default = false]
+    pub defeat_karasu_tengu_one_boss: bool,
+
+    /// Split on entering Tengu duo arena.
+    ///
+    /// This is a room split for entering Tengu duo arena.
+    #[default = false]
+    pub ic_tengu2: bool,
+
+    /// Split on defeating KarasuTengu the duo bird Tengu.
+    ///
+    /// This is the second Tengu of the Trio (two at once).
+    #[default = false]
+    pub defeat_karasu_tengu_two_boss: bool,
+
+    /// Split on entering DaiTengu's arena.
+    ///
+    /// This is a room split for entering DaiTengu's arena.
+    #[default = false]
+    pub ic_daitengu: bool,
+
+    /// Split on defeating DaiTengu Trio (all three birds).
+    ///
+    /// This is the final Tengu fight (all three of them).
+    #[default = false]
+    pub defeat_dai_tengu_boss: bool,
+
+    /// Split on entering the Gashadokuro fight.
+    ///
+    /// This is a room split for entering the Gashadokuro fight.
+    #[default = false]
+    pub gasha_boss_fight: bool,
+
+    /// Split on defeating Gashadokuro (the giant skeleton).
+    ///
+    /// This is the sixth boss of the game Gashadokuro.
+    #[default = false]
+    pub defeat_gash_boss: bool,
+
+    /// Split on entering Asahi chase room 1.
+    ///
+    /// This is a room split for entering Asahi chase room 1.
+    #[default = false]
+    pub imc_asahi1: bool,
+
+    /// Split on entering Asahi chase room 2.
+    ///
+    /// This is a room split for entering Asahi chase room 2.
+    #[default = false]
+    pub imc_asahi2: bool,
+
+    /// Split on entering Asahi chase room 3.
+    ///
+    /// This is a room split for entering Asahi chase room 3.
+    #[default = false]
+    pub imc_asahi3: bool,
+
+    /// Split on defeating Asahi.
+    ///
+    /// This is the second to last boss of the game.
+    #[default = false]
+    pub defeat_ashai_boss: bool,
+
+    /// Split on entering Sakura Shogun arena.
+    ///
+    /// This is a room split for entering the Shogun fight.
+    #[default = false]
+    pub imc_shogun: bool,
+
+    /// Split on defeating Sakura Shogun.
+    ///
+    /// This is the final boss.
+    #[default = false]
+    pub defeat_sakura_boss: bool,
+
+    /// Split on entering the first chase on the bridge.
+    ///
+    /// This is a room split for the first chase on the bridge.
+    #[default = false]
+    pub sb_wave: bool,
+
+    /// Split on entering the second chase on the bridge.
+    ///
+    /// This is a room split for the second chase on the bridge.
+    #[default = false]
+    pub sbss: bool,
+
+    /// Split on entering the tea field outside midori forest.
+    ///
+    /// This is a room split for the tea field outside midori forest.
+    #[default = false]
+    pub mf_tea_field: bool,
+
+    /// Split on entering the ice caverns central chamber.
+    ///
+    /// This is a room split for the ice caverns central chamber.
+    #[default = false]
+    pub ic_central: bool,
+
+    /// Split on entering the ice caverns west trial.
+    /// 
+    /// This is a room split for the ice caverns west trial.
+    #[default = false]
+    pub ic_west: bool,
+
+    /// Split on entering the ice caverns east trial.
+    ///
+    /// This is a room split for the ice caverns east trial.
+    #[default = false]
+    pub ic_east: bool,
+
+    /// Split on entering the ice caverns volcano room.
+    ///
+    /// This is a room split for the ice caverns volcano room.
+    #[default = false]
+    pub ic_volcano: bool,
 
     /// Split on entering the first palace elevator.
     ///
@@ -204,98 +414,13 @@ pub struct Settings {
     #[default = false]
     pub elevator_3_up: bool,
 
-    /// Split on starting the fox wedding quest.
-    ///
-    /// This splits on starting of the fox wedding quest.
+    /// Split on room transition
+    /// 
+    /// Split on every room transition
     #[default = false]
-    pub fox_wedding_start: bool,
+    pub split_on_room_transition: bool,
 
-    /// Split on saving the groom from Jorogumo.
-    ///
-    /// This splits on saving the Fox from the burrows spider Jorogumo.
-    #[default = false]
-    pub fox_wedding_save_groom: bool,
-
-    /// Split on finishing the fox wedding quest.
-    ///
-    /// This splits on completion of the fox wedding quest.
-    #[default = false]
-    pub fox_wedding_end: bool,
-
-    /// Split on defeating Kiri Kiri Bozu.
-    ///
-    /// This is the first boss of the game KiriKiri Bozu.
-    /// TODO: currently there is no split for this.
-    #[default = false]
-    pub defeated_kirikiri_boss: bool,
-
-    /// Split on defeating Particularly Unmanageable Armadillo.
-    ///
-    /// This is the second boss of the game Particularly Unmanageable Armadillo.
-    #[default = false]
-    pub defeated_pua_boss: bool,
-
-    /// Split on defeating Hashihime.
-    ///
-    /// This is the third boss of the game Hashihime.
-    #[default = false]
-    pub defeat_hashihime_boss: bool,
-
-    /// Split on defeating Kaboto Yokozuma (the beetle).
-    ///
-    /// This is the fourth boss of the game Kaboto Yokozuma.
-    #[default = false]
-    pub defeat_kaboto_boss: bool,
-
-    /// Split on defeating Jorogumo (the spider).
-    ///
-    /// This is the fifth boss of the game Jorogumo.
-    #[default = false]
-    pub defeat_jorogumo_boss: bool,
-
-    /// Split on defeating Kitsura (the fox).
-    ///
-    /// This is the extra boss in the game Kitsura.
-    #[default = false]
-    pub defeat_yuki_boss: bool,
-
-    /// Split on defeating KarasuTengu the single bird Tengu.
-    ///
-    /// This is the first Tengu of the Trio.
-    #[default = false]
-    pub defeat_karasu_tengu_one_boss: bool,
-
-    /// Split on defeating KarasuTengu the duo bird Tengu.
-    ///
-    /// This is the second Tengu of the Trio (two at once).
-    #[default = false]
-    pub defeat_karasu_tengu_two_boss: bool,
-
-    /// Split on defeating DaiTengu Trio (all three birds).
-    ///
-    /// This is the final Tengu fight (all three of them).
-    #[default = false]
-    pub defeat_dai_tengu_boss: bool,
-
-    /// Split on defeating Gashadokuro (the giant skeleton).
-    ///
-    /// This is the sixth boss of the game Gashadokuro.
-    #[default = false]
-    pub defeat_gash_boss: bool,
-
-    /// Split on defeating Ashai.
-    ///
-    /// This is the second to last boss of the game.
-    #[default = false]
-    pub defeat_ashai_boss: bool,
-
-    /// Split on defeating Sakura Shogun.
-    ///
-    /// This is the final boss.
-    #[default = false]
-    pub defeat_sakura_boss: bool,
-
-    /// Split on gaining atack ability.
+    /// Split on gaining attack ability.
     ///
     /// This is given once bamboo is collected for Asahi.
     #[default = false]
@@ -315,7 +440,7 @@ pub struct Settings {
 
     /// Split on gaining hover ability.
     ///
-    /// This is given after beating Kaboto.
+    /// This is given after beating Kabuto.
     #[default = false]
     pub can_hover: bool,
 

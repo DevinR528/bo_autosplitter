@@ -1,4 +1,5 @@
-use asr::{game_engine::unity::mono::Class, Address64};
+use asr::{game_engine::unity::mono::Class, Address64,};
+use asr::string::ArrayCString;
 use bytemuck::{Pod, Zeroable};
 
 #[allow(dead_code)]
@@ -297,10 +298,6 @@ pub struct QuestManager {
     #[rename = "<DefeatedJorogumo>k__BackingField"]
     pub defeat_spider_boss: bool,
 
-    /// This is the extra boss in the game "Kitsura" (the spider)
-    #[rename = "<DefeatedYuki>k__BackingField"]
-    pub defeat_yuki_boss: bool,
-
     /// This is the sixth boss in the game "Tengu" (the 3 bird warriors)
     #[rename = "<TenguTrialQuestCompleted>k__BackingField"]
     pub defeat_tengu_boss: bool,
@@ -325,6 +322,293 @@ pub struct QuestManager {
     // TODO: more of these...
 }
 
+#[derive(Class, Copy, Clone, PartialEq, Eq)]
+pub struct SceneNameManager {
+    /// Active scene seems to determine if we are in game, main menu, starting screen.
+    #[rename = "<activeSceneName>k__BackingField"]
+    pub active_scene_name: ArrayCString<32>,
+    
+    #[rename = "<EndCreditsk__BackingField"]
+    pub end_credits: ArrayCString<32>,
+
+    #[rename = "<MainMenu>k__BackingField"]
+    pub main_menu: ArrayCString<32>,
+
+    #[rename = "<HumblePlayground>k__BackingField"]
+    pub humble_playground: ArrayCString<32>,
+
+    /// Current world map area is what loading zone you are in in-game.
+    #[rename = "<CurrentWorldMapArea>k__BackingField"]
+    pub current_world_map_area: ArrayCString<32>,
+
+    /// cbf = crimson bamboo forest
+    #[rename = "<CBFIntro>k__BackingField"]
+    pub cbf_intro: ArrayCString<32>,
+
+    #[rename = "<CBFBumpIntro>k__BackingField"]
+    pub cbf_bump_intro: ArrayCString<32>,
+
+    #[rename = "<CBFCaveEntrance>k__BackingField"]
+    pub cbf_cave_entrance: ArrayCString<32>,
+
+    #[rename = "<Coast1>k__BackingField"]
+    pub coast1: ArrayCString<32>,
+
+    /// uc = uzumaki cave
+    #[rename = "<UCEntrance>k__BackingField"]
+    pub uc_entrance: ArrayCString<32>,
+
+    #[rename = "<UCShortcut>k__BackingField"]
+    pub uc_shortcut: ArrayCString<32>,
+
+    #[rename = "<UCArenaPuzzle>k__BackingField"]
+    pub uc_arena_puzzle: ArrayCString<32>,
+
+    #[rename = "<UCMainChamber>k__BackingField"]
+    pub uc_main_chamber: ArrayCString<32>,
+
+    #[rename = "<UCHerder>k__BackingField"]
+    pub uc_herder: ArrayCString<32>,
+
+    #[rename = "<UCAmaterasu>k__BackingField"]
+    pub uc_amaterasu: ArrayCString<32>,
+
+    #[rename = "<UCNorthPuzzle>k__BackingField"]
+    pub uc_north_puzzle: ArrayCString<32>,
+
+    #[rename = "<UCBoss>k__BackingField"]
+    pub uc_boss: ArrayCString<32>,
+
+    #[rename = "<UCAmaterasuDwelling>k__BackingField"]
+    pub uc_amaterasu_dwelling: ArrayCString<32>,
+
+    /// sb = sencho bridge
+    #[rename = "<SBEntrance>k__BackingField"]
+    pub sb_entrance: ArrayCString<32>,
+    
+    #[rename = "<SBEscalation>k__BackingField"]
+    pub sb_escalation: ArrayCString<32>,
+
+    #[rename = "<SBWave>k__BackingField"]
+    pub sb_wave: ArrayCString<32>,
+
+    #[rename = "<SBSS>k__BackingField"]
+    pub sbss: ArrayCString<32>,
+
+    #[rename = "<SBHH>k__BackingField"]
+    pub sbhh: ArrayCString<32>,
+
+    #[rename = "<SBNightToDay>k__BackingField"]
+    pub sb_night_to_day: ArrayCString<32>,
+
+    /// saci = sakura city
+    #[rename = "<Coast2>k__BackingField"]
+    pub coast2: ArrayCString<32>,
+
+    #[rename = "<SACIWalls>k__BackingField"]
+    pub saci_walls: ArrayCString<32>,
+
+    #[rename = "<SACITier1>k__BackingField"]
+    pub saci_tier1: ArrayCString<32>,
+
+    #[rename = "<SACILibraryFloor1>k__BackingField"]
+    pub saci_library_floor1: ArrayCString<32>,
+
+    #[rename = "<SACILibraryFloor2>k__BackingField"]
+    pub saci_library_floor2: ArrayCString<32>,
+
+    #[rename = "<HallOfHaikus>k__BackingField"]
+    pub hall_of_haikus: ArrayCString<32>,
+
+    #[rename = "<ShrineOfTheLillies>k__BackingField"]
+    pub shrine_of_the_lillies: ArrayCString<32>,
+
+    #[rename = "<SACISumo>k__BackingField"]
+    pub saci_sumo: ArrayCString<32>,
+
+    #[rename = "<SACITargetsMiniGame>k__BackingField"]
+    pub saci_targets_mini_game: ArrayCString<32>,
+    
+    #[rename = "<SACIFoxHouse>k__BackingField"]
+    pub saci_fox_house: ArrayCString<32>,
+
+    #[rename = "<SACITier2>k__BackingField"]
+    pub saci_tier2: ArrayCString<32>,
+
+    #[rename = "<SACIArmory>k__BackingField"]
+    pub saci_armory: ArrayCString<32>,
+
+    #[rename = "<SACIDarumaShop>k__BackingField"]
+    pub saci_daruma_shop: ArrayCString<32>,
+
+    #[rename = "<SACITier3>k__BackingField"]
+    pub saci_tier3: ArrayCString<32>,
+
+    #[rename = "<SACITeaHouse>k__BackingField"]
+    pub saci_tea_house: ArrayCString<32>,
+
+    #[rename = "<GashaBossFight>k__BackingField"]
+    pub gasha_boss_fight: ArrayCString<32>,
+
+    #[rename = "<GashaSkull>k__BackingField"]
+    pub gasha_skull: ArrayCString<32>,
+
+    /// mf = Midori Forest
+    #[rename = "<MFTeaField>k__BackingField"]
+    pub mf_tea_field: ArrayCString<32>,
+
+    #[rename = "<MFTeaFieldDestroyed>k__BackingField"]
+    pub mf_tea_field_destroyed: ArrayCString<32>,
+    
+    #[rename = "<MFAsahi>k__BackingField"]
+    pub mf_asahi: ArrayCString<32>,
+
+    #[rename = "<MFArena>k__BackingField"]
+    pub mf_arena: ArrayCString<32>,
+
+    #[rename = "<MFEscort>k__BackingField"]
+    pub mf_escort: ArrayCString<32>,
+
+    #[rename = "<MFShrine>k__BackingField"]
+    pub mf_shrine: ArrayCString<32>,
+
+    #[rename = "<MFTreetops>k__BackingField"]
+    pub mf_treetops: ArrayCString<32>,
+
+    #[rename = "<MFMaze>k__BackingField"]
+    pub mf_maze: ArrayCString<32>,
+
+    #[rename = "<MFBurrowEntry>k__BackingField"]
+    pub mf_burrow_entry: ArrayCString<32>,
+
+    #[rename = "<MFBoss>k__BackingField"]
+    pub mf_boss: ArrayCString<32>,
+
+    #[rename = "<MFWedding>k__BackingField"]
+    pub mf_wedding: ArrayCString<32>,
+    
+    /// mm = megumi mountain
+    #[rename = "<MMBase>k__BackingField"]
+    pub mm_base: ArrayCString<32>,
+    
+    #[rename = "<MMCaveAscent>k__BackingField"]
+    pub mm_cave_ascent: ArrayCString<32>,
+
+    #[rename = "<MMVillage>k__BackingField"]
+    pub mm_village: ArrayCString<32>,
+
+    #[rename = "<MMVista>k__BackingField"]
+    pub mm_vista: ArrayCString<32>,
+
+    #[rename = "<MMMainAscent>k__BackingField"]
+    pub mm_main_ascent: ArrayCString<32>,
+
+    #[rename = "<MMTrainingGrounds>k__BackingField"]
+    pub mm_training_grounds: ArrayCString<32>,
+
+    #[rename = "<MMSumoLobby>k__BackingField"]
+    pub mm_sumo_lobby: ArrayCString<32>,
+
+    #[rename = "<MMSumoStage1>k__BackingField"]
+    pub mm_sumo_stage1: ArrayCString<32>,
+
+    #[rename = "<MMSumoStage2>k__BackingField"]
+    pub mm_sumo_stage2: ArrayCString<32>,
+
+    #[rename = "<MMYokozuna>k__BackingField"]
+    pub mm_yokozuna: ArrayCString<32>,
+
+    #[rename = "<MMSummit>k__BackingField"]
+    pub mm_summit: ArrayCString<32>,
+
+    #[rename = "<MMUnderground>k__BackingField"]
+    pub mm_underground: ArrayCString<32>,
+
+    #[rename = "<MMGunbai>k__BackingField"]
+    pub mm_gunbai: ArrayCString<32>,
+
+    #[rename = "<MMTeaHouse>k__BackingField"]
+    pub mm_teahouse: ArrayCString<32>,
+
+    #[rename = "<MMOptionalPuzzle>k__BackingField"]
+    pub mm_optional_puzzle: ArrayCString<32>,
+    
+    /// kb = kitsune burrows
+    #[rename = "<KBJorogumo>k__BackingField"]
+    pub kb_jorogumo: ArrayCString<32>,
+    
+    #[rename = "<KBWest>k__BackingField"]
+    pub kb_west: ArrayCString<32>,
+
+    #[rename = "<KBSouth>k__BackingField"]
+    pub kb_south: ArrayCString<32>,
+    
+    #[rename = "<KBEntrance>k__BackingField"]
+    pub kb_entrance: ArrayCString<32>,
+
+    #[rename = "<KBBugNest>k__BackingField"]
+    pub kb_bug_nest: ArrayCString<32>,
+
+    #[rename = "<KBAscent>k__BackingField"]
+    pub kb_ascent: ArrayCString<32>,
+
+    /// ic = ice caverns
+    #[rename = "<ICTengu1>k__BackingField"]
+    pub ic_tengu1: ArrayCString<32>,
+
+    #[rename = "<ICTengu2>k__BackingField"]
+    pub ic_tengu2: ArrayCString<32>,
+
+    #[rename = "<ICDaiTengu>k__BackingField"]
+    pub ic_daitengu: ArrayCString<32>,
+    
+    #[rename = "<ICCentral>k__BackingField"]
+    pub ic_central: ArrayCString<32>,
+
+    #[rename = "<ICWest>k__BackingField"]
+    pub ic_west: ArrayCString<32>,
+
+    #[rename = "<ICEastRedesign>k__BackingField"]
+    pub ic_east: ArrayCString<32>,
+
+    #[rename = "<ICVolcano>k__BackingField"]
+    pub ic_volcano: ArrayCString<32>,
+    
+    /// imc = imperial castle
+    #[rename = "<IMCEntrance>k__BackingField"]
+    pub imc_entrance: ArrayCString<32>,
+    
+    #[rename = "<IMCFloor1>k__BackingField"]
+    pub imc_floor1: ArrayCString<32>,
+
+    #[rename = "<IMCFloor2>k__BackingField"]
+    pub imc_floor2: ArrayCString<32>,
+
+    #[rename = "<IMCFloor3>k__BackingField"]
+    pub imc_floor3: ArrayCString<32>,
+
+    #[rename = "<IMCElevator>k__BackingField"]
+    pub imc_elevator: ArrayCString<32>,
+
+    #[rename = "<IMCAsahi1>k__BackingField"]
+    pub imc_asahi1: ArrayCString<32>,
+
+    #[rename = "<IMCAsahi2>k__BackingField"]
+    pub imc_asahi2: ArrayCString<32>,
+
+    #[rename = "<IMCAsahi3>k__BackingField"]
+    pub imc_asahi3: ArrayCString<32>,
+
+    #[rename = "<IMCFinalAscent>k__BackingField"]
+    pub imc_final_ascent: ArrayCString<32>,
+
+    #[rename = "<IMCShogun>k__BackingField"]
+    pub imc_shogun: ArrayCString<32>,
+
+    #[rename = "<CelestialRealm>k__BackingField"]
+    pub celestial_realm: ArrayCString<32>,
+
+}
 #[derive(Class, Copy, Clone, Debug, PartialEq)]
 pub struct GameManager {
     #[rename = "<FromMainMenu>k__BackingField"]
@@ -365,4 +649,8 @@ pub struct GameManager {
     pub enemies_pointer: Address64,
     #[rename = "darumaManager"]
     pub daruma_pointer: Address64,
+    #[rename = "omamoriManager"]
+    pub omamori_pointer: Address64,
+    #[rename = "sceneNameManager"]
+    pub scene_name_pointer: Address64,
 }

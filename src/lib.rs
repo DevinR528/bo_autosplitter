@@ -1,7 +1,6 @@
 #![feature(type_alias_impl_trait, const_async_blocks, wasi_ext)]
 
 use std::{collections::HashMap, fs::File, io::BufReader};
-
 use asr::{
     future::next_tick,
     game_engine::unity::{get_scene_name, mono::Module, SceneManager},
@@ -20,7 +19,7 @@ use array::CSharpArray;
 use game_data::{
     AbilityManager, BetaPlayerDataManager, BossData, BossDataBinding, BossKind, Daruma,
     DarumaBinding, DarumaManager, DarumaType, EnemiesManager, GameManager, InventoryContainer,
-    QuestManager,
+    QuestManager, SceneNameManager,
 };
 use settings::{NumberOfKodamas, Settings};
 
@@ -128,7 +127,7 @@ async fn main() {
                             print_message(&format!("{:#?}", inventory_container));
                             old_inventory_container = Some(inventory_container);
                         }
-
+                        
                         let boss_class = BossData::bind(&process, &module, &img).await;
                         let enemies_manager = EnemiesManager::bind(&process, &module, &img).await;
                         print_message("got EnemiesManager");
@@ -189,7 +188,7 @@ async fn main() {
                             }
                             // This checks for on the fly updates to the settings (you could add a split mid run)
                             update_settings(&mut settings, &mut old_setting_file, &mut completed_splits);
-
+                            
                             // UPDATE first since this knows about everything
                             match game_manager_class.read(&process, game_manager_inst) {
                                 Ok(game_manager) if old_game_manager != Some(game_manager) => {
@@ -223,7 +222,7 @@ async fn main() {
                                         }
                                         _ => {}
                                     }
-
+                                    
                                     macro_rules! check_game_manager {
                                         ($field:ident, $msg:expr) => {
                                             match old_game_manager.map(|am| am.$field) {
@@ -316,7 +315,7 @@ async fn main() {
 
                                 // Update the scene we track
                                 if old_scene_name.as_deref() != Some(&name) {
-                                    print_message(&format!("new secene {}", name));
+                                    print_message(&format!("new scene {}", name));
                                     // Start timer for the first time
                                     if old_scene_name.as_deref() == Some("New Main Menu")
                                         && name == "CBF Intro"
@@ -336,6 +335,94 @@ async fn main() {
                                         timer::pause_game_time();
                                         continue 'reset_all_class_pointers;
                                     }
+
+                                    let mut scene_name_manager = SceneNameManager {};
+                                    macro_rules! check_scene_name {
+                                        ($field:ident, $msg:expr) => {
+                                            print_message(&(["before if ", &stringify!(scene_name_manager.$field), " ", &name].join("")));
+                                            print_message(&(["field == name is... ", &stringify!(stringify!(scene_name_manager.$field) == name)].join("")));
+                                            if scene_name_manager.$field. == name
+                                                && settings.$field
+                                                && !completed_splits
+                                                    .get(stringify!($field))
+                                                    .copied()
+                                                    .unwrap_or(true)
+                                            {
+                                                print_message(concat!("Split for ", $msg));
+                                                *completed_splits
+                                                    .entry(stringify!($field).to_string())
+                                                    .or_insert(true) = true;
+                                                timer::split();
+                                            }
+                                        };
+                                    }
+
+                                    // SPLITS
+                                    // Split on EVERY room
+                                    if settings.split_on_room_transition && old_scene_name.as_deref() != Some("New Main Menu") {
+                                        print_message("Split on room transition");
+                                        timer::split();
+                                    }
+
+                                    // Checks if the current world area is the armakillo boss room
+                                    check_scene_name!(uc_boss, "entering armakillo boss room");
+                                    
+                                    // Checks if the current world area is the bridge first chase
+                                    check_scene_name!(sb_wave, "entering bridge first chase");
+
+                                    // Checks if the current world area is the bridge second chase
+                                    check_scene_name!(sbss, "entering bridge second chase");
+
+                                    // Checks if the current world area is the Hashihime boss room
+                                    check_scene_name!(sbhh, "entering Hashihime boss room");
+                                    
+                                    // Checks if the current world area is the midori forest tea field
+                                    check_scene_name!(mf_tea_field, "entering midori forest tea field");
+
+                                    // Checks if the current world area is the Kitsura boss room
+                                    check_scene_name!(mf_boss, "entering Kitsura boss room");
+                                    
+                                    // Checks if the current world area is the Kabuto Yokozuna boss room
+                                    check_scene_name!(mm_yokozuna, "entering Kabuto Yokozuna boss room");
+                                    
+                                    // Checks if the current world area is the Jorogumo boss room
+                                    check_scene_name!(kb_jorogumo, "entering Jorogumo boss room");
+                                    
+                                    // Checks if the current world area is the Tengu solo boss room
+                                    check_scene_name!(ic_tengu1, "entering Tengu solo boss room");
+
+                                    // Checks if the current world area is the Tengu duo boss room
+                                    check_scene_name!(ic_tengu2, "entering Tengu duo boss room");
+
+                                    // Checks if the current world area is the DaiTengu boss room
+                                    check_scene_name!(ic_daitengu, "entering DaiTengu boss room");
+
+                                    // Checks if the current world area is the ice caverns central room
+                                    check_scene_name!(ic_central, "entering ice caverns central");
+
+                                    // Checks if the current world area is the ice caverns west trial
+                                    check_scene_name!(ic_west, "entering ice caverns west trial");
+
+                                    // Checks if the current world area is the ice caverns east trial
+                                    check_scene_name!(ic_east, "entering ice caverns east trial");
+
+                                    // Checks if the current world area is the ice caverns volcano room
+                                    check_scene_name!(ic_volcano, "entering ice caverns volcano room");
+
+                                    // Checks if the current world area is the Gashadokuro boss fight
+                                    check_scene_name!(gasha_boss_fight, "entering Gashadokuro boss fight");
+
+                                    // Checks if the current world area is the Asahi chase first room
+                                    check_scene_name!(imc_asahi1, "entering Asahi chase room 1");
+
+                                    // Checks if the current world area is the Asahi chase second room
+                                    check_scene_name!(imc_asahi2, "entering Asahi chase room 2");
+
+                                    // Checks if the current world area is the Asahi chase room 3
+                                    check_scene_name!(imc_asahi3, "entering Asahi chase room 3");
+
+                                    // Checks if the current world area is the Shogun boss room
+                                    check_scene_name!(imc_shogun, "entering Shogun boss room");
 
                                     old_scene_name = Some(name);
                                 }
@@ -422,7 +509,7 @@ async fn main() {
                                     check_quest!(east_feather_in_keyhole, "second feather key inserted");
 
                                     // Defeated Kaboto (beetle)
-                                    check_quest!(defeat_kaboto_boss, "Kaboto defeated");
+                                    check_quest!(defeat_kaboto_boss, "Kabuto defeated");
                                     // Defeated Gashadokuro
                                     check_quest!(defeat_gash_boss, "Gashadokuro defeated");
                                     // Credits roll you did it
