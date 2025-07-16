@@ -336,7 +336,14 @@ async fn main() {
                                         timer::pause_game_time();
                                         continue 'reset_all_class_pointers;
                                     }
-
+                                    
+                                    // SPLITS
+                                    // Split by room
+                                    if settings.split_on_room_transition && old_scene_name.as_deref() != Some("New Main Menu") {
+                                        print_message("Split on room transition");
+                                        timer::split();
+                                    }
+                                    
                                     old_scene_name = Some(name);
                                 }
                             }

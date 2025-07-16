@@ -396,6 +396,12 @@ pub struct Settings {
     #[default = false]
     pub credits_roll: bool,
 
+    /// Split on room transition
+    /// 
+    /// Split on every room transition
+    #[default = false]
+    pub split_on_room_transition: bool,
+    
     /// Split on some number of Kodama's found.
     ///
     /// These are the little turnup things that you pull out of the ground to build stuff.
